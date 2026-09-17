@@ -1,0 +1,26 @@
+title: ROUTEPOL brand rename + tagline
+scope:
+  project: pol-turk
+  module: brand / public copy
+  out_of_scope:
+    - Hostinger/Plesk DNS
+    - CSS token prefix pt-*
+    - repo folder rename
+    - invented legal entity / NIP
+intent:
+  what: Replace user-facing POL-TURK with ROUTEPOL; set tagline “Polonya’da yol gösteren rota.” (+ PL/EN).
+  why: Operator locked brand ROUTEPOL; message matches admin+investment route model.
+  triggered_by: user_request
+steps:
+  - { order: 1, action: snapshot brand surfaces, files: [_snapshots/2026-09-15-pre-routepol-brand/], risk: low }
+  - { order: 2, action: BrandLockup default + content brand fields, files: [BrandLockup.tsx, landing/*, tr/pl/en, hakkimizda, danismanlik], risk: medium }
+  - { order: 3, action: Sweep visible POL-TURK in src content/mail/pdf/panel, files: [src/], risk: medium }
+  - { order: 4, action: guard + Browser QA /tr hero, files: [], risk: low }
+success_criteria:
+  - Public hero shows ROUTEPOL + TR tagline
+  - No user-facing POL-TURK in src/content and BrandLockup default
+  - pre-commit-guard green
+restore_phrase: pre-routepol-brand
+references: same as last (Quiet Authority; brand text only)
+estimated_effort: 35
+risk_overall: medium

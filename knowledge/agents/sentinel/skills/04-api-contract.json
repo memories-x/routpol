@@ -1,0 +1,36 @@
+{
+  "id": "api-contract",
+  "title": "HTTP API Contract",
+  "description": "Optional REST envelope and routing discipline. Configure in project.invariants.yaml → api, network, routing.",
+  "reference": "project.invariants.yaml",
+  "scope": "any",
+  "ext": [".ts", ".tsx", ".js", ".go", ".py", ".rs"],
+  "rules": [
+    {
+      "id": "RAW_JSON_RESPONSE",
+      "pattern": "res\\.json\\s*\\(\\s*\\{(?![^}]*success)",
+      "severity": "warn",
+      "message": "res.json() without envelope success key — may break API contract.",
+      "remediation": "Wrap responses per project.invariants.yaml api.envelope. Disable rule if project has no envelope convention.",
+      "reference": "PROJECT_CHARTER.md → API",
+      "scope": "backend"
+    },
+    {
+      "id": "HARDCODED_FORBIDDEN_PORT",
+      "pattern": "localhost:(3000|4000|5000)",
+      "severity": "warn",
+      "message": "Common dev port — may conflict with project canonical port.",
+      "remediation": "Use network.canonical_port from project.invariants.yaml or env var. Customize forbidden_ports list.",
+      "reference": "project.invariants.yaml → network"
+    },
+    {
+      "id": "STATIC_AFTER_DYNAMIC_ROUTE",
+      "pattern": "router\\.(get|post|put|delete|patch)\\s*\\(\\s*['\"]/:[a-zA-Z]+['\"]",
+      "severity": "info",
+      "message": "Dynamic route — ensure static routes registered before param routes if routing.static_before_dynamic is true.",
+      "remediation": "Register static paths before /:id handlers (Express, similar frameworks).",
+      "reference": "project.invariants.yaml → routing",
+      "scope": "backend"
+    }
+  ]
+}

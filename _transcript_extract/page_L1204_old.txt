@@ -1,0 +1,2 @@
+      <Hero content={content} locale={locale} />
+      <Services content={content} locale={locale} />

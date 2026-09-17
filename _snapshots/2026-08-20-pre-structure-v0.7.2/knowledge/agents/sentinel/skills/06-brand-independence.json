@@ -1,0 +1,26 @@
+{
+  "id": "brand-independence",
+  "title": "Brand & Vendor String Discipline",
+  "description": "Internal vendor or backend provider names must not leak to user-facing copy. Configure forbidden_strings in project.invariants.yaml → brand.",
+  "reference": "project.invariants.yaml → brand",
+  "scope": "any",
+  "ext": [".tsx", ".jsx", ".html", ".md", ".css", ".ts", ".js", ".vue"],
+  "rules": [
+    {
+      "id": "PLACEHOLDER_FORBIDDEN_VENDOR",
+      "pattern": "CHANGE_ME_FORBIDDEN_VENDOR",
+      "severity": "info",
+      "message": "Template placeholder — replace with your forbidden vendor string in this skill JSON after copying project.invariants.yaml.",
+      "remediation": "Edit 06-brand-independence.json pattern to match brand.forbidden_strings. Or disable brand.enabled in invariants.",
+      "reference": "project.invariants.yaml"
+    },
+    {
+      "id": "INTERNAL_SERVICE_LEAK_HINT",
+      "pattern": "(internal-api|legacy-backend|old-vendor)",
+      "severity": "info",
+      "message": "Possible internal service name in user-facing file — verify visibility.",
+      "remediation": "User-facing copy should use brand.public_name. Keep integration names in backend-only modules.",
+      "reference": "PROJECT_CHARTER.md → brand"
+    }
+  ]
+}

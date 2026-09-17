@@ -1,0 +1,50 @@
+{
+  "id": "typescript-strict",
+  "title": "TypeScript Strict Discipline",
+  "description": "Type laundering — places where `any` and unchecked casts hide bugs.",
+  "reference": "AGENTS.md → Defensive Frontend",
+  "scope": "any",
+  "ext": [".ts", ".tsx"],
+  "rules": [
+    {
+      "id": "TYPE_ASSERTION_AS_UNKNOWN",
+      "pattern": "as\\s+unknown\\s+as\\s+",
+      "severity": "warn",
+      "message": "Double cast `as unknown as X` bypasses type system entirely — almost always a smell.",
+      "remediation": "Define proper types, use type guard, or fix the source type. Double cast is last resort.",
+      "reference": "AGENTS.md"
+    },
+    {
+      "id": "BANG_INDEX",
+      "pattern": "\\]!\\s*[.,;)]",
+      "severity": "warn",
+      "message": "Non-null assertion on array access (`arr[i]!`) silently crashes on out-of-bounds.",
+      "remediation": "Use length check: `arr[i] ?? fallback` or `if (arr.length > i) arr[i]`.",
+      "reference": "AGENTS.md"
+    },
+    {
+      "id": "ANY_PARAM",
+      "pattern": "\\(\\s*[a-zA-Z_]\\w*\\s*:\\s*any\\s*[,)]",
+      "severity": "info",
+      "message": "Function parameter typed `any` — caller can pass anything, type errors invisible.",
+      "remediation": "Type the parameter properly or use `unknown` and validate. `any` only for true escape hatch.",
+      "reference": "AGENTS.md"
+    },
+    {
+      "id": "IMPLICIT_RETURN_ANY",
+      "pattern": "export\\s+(async\\s+)?function\\s+\\w+\\s*\\([^)]*\\)\\s*\\{",
+      "severity": "info",
+      "message": "Exported function without explicit return type — TS infers but consumers see `any` on errors.",
+      "remediation": "Add `: ReturnType` after the parameter list for exported functions.",
+      "reference": "tsconfig.app.json strict"
+    },
+    {
+      "id": "ENUM_AS_STRING",
+      "pattern": ":\\s*string\\s*=\\s*['\"](?:running|stopped|paused|error|pending|ready|active|inactive)['\"]",
+      "severity": "info",
+      "message": "String literal status — invites typos. Consider a union type or const enum.",
+      "remediation": "Use `type Status = 'running' | 'stopped' | ...` and reference centrally.",
+      "reference": "AGENTS.md"
+    }
+  ]
+}

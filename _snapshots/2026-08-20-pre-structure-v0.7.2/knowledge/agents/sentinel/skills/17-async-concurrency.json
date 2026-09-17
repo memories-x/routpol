@@ -1,0 +1,56 @@
+{
+  "id": "async-concurrency",
+  "title": "Async / Concurrency Discipline",
+  "description": "Unhandled rejections, race conditions, Promise.all without error containment.",
+  "reference": "MDN Promise — error handling",
+  "scope": "any",
+  "ext": [".ts", ".tsx", ".js"],
+  "rules": [
+    {
+      "id": "FLOATING_PROMISE",
+      "pattern": "^\\s*[a-zA-Z_]\\w*\\.(then|catch|finally)\\s*\\(",
+      "flags": "gm",
+      "severity": "info",
+      "message": "Promise chain başlangıcı — return / await edilmiyorsa unhandled rejection riski.",
+      "remediation": "await ile bekle veya void işareti ekle (`void someAsync()`) — caller'a unhandled rejection sızdırma.",
+      "reference": "MDN — Unhandled rejection"
+    },
+    {
+      "id": "PROMISE_ALL_NO_CATCH",
+      "pattern": "Promise\\.all\\s*\\([\\s\\S]{0,200}?\\)(?!\\s*\\.catch)(?!\\s*;?\\s*//[^\\n]*allowed)",
+      "flags": "g",
+      "severity": "warn",
+      "message": "Promise.all rejection'da kalan promise'ları iptal etmez, hepsi crash — explicit .catch veya allSettled tercih edilebilir.",
+      "remediation": "Veri bağımsızsa Promise.allSettled kullan. Bağımlıysa try/catch + errMessage.",
+      "reference": "MDN — Promise.allSettled"
+    },
+    {
+      "id": "AWAIT_IN_CONDITIONAL_LOOP",
+      "pattern": "while\\s*\\([\\s\\S]{0,80}?\\)\\s*\\{[\\s\\S]{0,200}?await\\s",
+      "flags": "g",
+      "severity": "info",
+      "message": "while loop içinde await — sonsuz bekleme veya CPU sızıntısı riski.",
+      "remediation": "Loop condition'a timeout/maxIter ekle. Veya event-driven pattern'a geçir.",
+      "reference": "MDN — async iteration"
+    },
+    {
+      "id": "SETSTATE_AFTER_AWAIT",
+      "pattern": "await\\s+[\\s\\S]{0,300}?set[A-Z]\\w*\\s*\\(",
+      "flags": "g",
+      "severity": "info",
+      "message": "await sonrası setState — komponent unmount olmuşsa React warning üretir (`Can't perform a state update`).",
+      "remediation": "useRef ile mounted flag tut, setState'ten önce kontrol et. Veya AbortController kullan.",
+      "reference": "react.dev — race conditions",
+      "scope": "panel"
+    },
+    {
+      "id": "RACE_INTERVAL_NO_GUARD",
+      "pattern": "setInterval\\s*\\([\\s\\S]{0,200}?\\bawait\\s",
+      "flags": "g",
+      "severity": "warn",
+      "message": "setInterval içinde await — yavaş callback önceki tick bitmeden tetiklenirse race oluşur.",
+      "remediation": "Async work bittikten sonra `setTimeout(..., interval)` kullan. Veya `if (busy) return;` guard ekle.",
+      "reference": "MDN — setInterval pitfalls"
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "typescriptProjects": [
+    {
+      "name": "frontend",
+      "cwd": "frontend",
+      "command": "npx tsc --noEmit"
+    },
+    {
+      "name": "backend",
+      "cwd": "backend",
+      "command": "npx tsc --noEmit"
+    }
+  ],
+  "sentinel": {
+    "args": ["--all"]
+  },
+  "skipIfMissing": true
+}

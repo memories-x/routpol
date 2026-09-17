@@ -1,0 +1,44 @@
+{
+  "id": "error-handling",
+  "title": "Error Handling Discipline",
+  "description": "Half migration patterns — `any → unknown` without type guards cause TS2339 at runtime check.",
+  "reference": "src/utils/errors.ts (errMessage helper)",
+  "scope": "any",
+  "ext": [".ts", ".tsx"],
+  "rules": [
+    {
+      "id": "UNKNOWN_DIRECT_MESSAGE",
+      "pattern": "catch\\s*\\(\\s*\\w+\\s*:\\s*unknown\\s*\\)[\\s\\S]{0,300}?\\b\\w+\\?\\.\\s*message\\b",
+      "flags": "g",
+      "severity": "error",
+      "message": "catch(e: unknown) sonra e?.message — TS2339, unknown'da property erişimi yasak.",
+      "remediation": "Type guard ekle: e instanceof Error ? e.message : String(e). Veya errMessage(e) helper'ı kullan (src/utils/errors.ts).",
+      "reference": "Plan C learning entry — half migration pattern"
+    },
+    {
+      "id": "UNKNOWN_DIRECT_PROPERTY",
+      "pattern": "catch\\s*\\(\\s*(\\w+)\\s*:\\s*unknown\\s*\\)\\s*\\{[\\s\\S]{0,400}?\\b\\1\\??\\.(?!toString\\b)\\w+\\b",
+      "flags": "g",
+      "severity": "error",
+      "message": "unknown tipinde doğrudan property erişimi (errMessage helper kullanılmamış) — type guard'sız.",
+      "remediation": "errMessage(e) kullan (src/utils/errors.ts) veya instanceof Error narrow et önce.",
+      "reference": "TypeScript strict mode + errors.ts"
+    },
+    {
+      "id": "CATCH_ANY_TYPE",
+      "pattern": "catch\\s*\\(\\s*\\w+\\s*:\\s*any\\s*\\)",
+      "severity": "warn",
+      "message": "catch (e: any) — type safety bypass. unknown + errMessage tercih edilmeli.",
+      "remediation": "catch (e: unknown) yap ve errMessage(e) helper'ı kullan. src/utils/errors.ts.",
+      "reference": "Plan A — errMessage utility"
+    },
+    {
+      "id": "ERROR_STRING_CONCAT_RAW",
+      "pattern": "(?:console\\.error|logger\\.error)\\s*\\(\\s*['\"`][^'\"`]*['\"`]\\s*\\+\\s*\\w+\\s*\\)",
+      "severity": "info",
+      "message": "Error log'unda raw concat — error nesnesi `String()` ile coerce edilmiyor olabilir.",
+      "remediation": "errMessage(e) helper'ı kullan veya `e instanceof Error ? e.message : String(e)` ile coerce et.",
+      "reference": "src/utils/errors.ts"
+    }
+  ]
+}

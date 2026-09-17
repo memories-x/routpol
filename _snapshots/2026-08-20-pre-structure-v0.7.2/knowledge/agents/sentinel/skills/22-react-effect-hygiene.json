@@ -1,0 +1,50 @@
+{
+  "id": "react-effect-hygiene",
+  "title": "React Effect Hygiene",
+  "description": "useEffect anti-pattern'leri: async callback, eksik cleanup, listener/interval/timeout sızıntıları.",
+  "reference": "docs/wiki/<feature>.md",
+  "scope": "any",
+  "ext": [".tsx", ".jsx", ".ts", ".js"],
+  "rules": [
+    {
+      "id": "ASYNC_USE_EFFECT_CALLBACK",
+      "pattern": "useEffect\\s*\\(\\s*async\\s*[\\(\\w]",
+      "severity": "error",
+      "message": "useEffect callback async olamaz - return değeri Promise olur, cleanup mekanizması bozulur, race condition'lara yol açar.",
+      "remediation": "useEffect içinde async fonksiyon tanımla: useEffect(() => { const run = async () => { ... }; run(); }, [...])",
+      "reference": "React docs: Effects"
+    },
+    {
+      "id": "EFFECT_ADD_LISTENER_NO_CLEANUP",
+      "pattern": "useEffect\\s*\\([\\s\\S]{0,80}addEventListener\\b(?![\\s\\S]{0,500}removeEventListener)",
+      "severity": "warn",
+      "message": "addEventListener kullanılmış ama cleanup'ta removeEventListener yok - memory leak ve unmount sonrası 'state on unmounted component' uyarısı.",
+      "remediation": "return () => element.removeEventListener(event, handler) ekle.",
+      "reference": "React Effects cleanup"
+    },
+    {
+      "id": "EFFECT_SET_INTERVAL_NO_CLEANUP",
+      "pattern": "useEffect\\s*\\([\\s\\S]{0,80}setInterval\\b(?![\\s\\S]{0,500}clearInterval)",
+      "severity": "error",
+      "message": "setInterval kullanıldı ama clearInterval cleanup yok - memory leak + unmount sonrası state update bug.",
+      "remediation": "const id = setInterval(...); return () => clearInterval(id);",
+      "reference": "React Effects cleanup"
+    },
+    {
+      "id": "EFFECT_SET_TIMEOUT_NO_CLEANUP",
+      "pattern": "useEffect\\s*\\([\\s\\S]{0,80}setTimeout\\b(?![\\s\\S]{0,500}clearTimeout)",
+      "severity": "warn",
+      "message": "setTimeout cleanup'ı yok - unmount sonrası callback çalışırsa 'state update on unmounted' warning gelir.",
+      "remediation": "const t = setTimeout(...); return () => clearTimeout(t);",
+      "reference": "React Effects cleanup"
+    },
+    {
+      "id": "EFFECT_EMPTY_DEPS_LIKELY_STALE",
+      "pattern": "useEffect\\s*\\(\\s*\\(\\s*\\)\\s*=>\\s*\\{[\\s\\S]{40,800}\\}\\s*,\\s*\\[\\s*\\]\\s*\\)",
+      "severity": "warn",
+      "message": "useEffect deps array boş ama callback uzun (40+ char) - stale closure riski; içeride state/prop kullanıyorsan deps eksik.",
+      "remediation": "Effect içinde kullanılan tüm state/prop'ları deps array'e ekle, veya effect'i ref-bazlı yeniden tasarla.",
+      "reference": "React hooks exhaustive-deps"
+    }
+  ]
+}

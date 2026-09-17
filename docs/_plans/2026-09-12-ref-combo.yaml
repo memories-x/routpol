@@ -1,0 +1,21 @@
+id: 2026-09-12-ref-combo
+surface: landing-shell (operator: bir kombinasyon yap)
+goal: >
+  Combine reference DNA without cloning: Clerk product demo + CTA,
+  Mercury open breath, Attio section rhythm (not card wall),
+  Pitch calm motion, Revolut controlled cross-border navy band.
+refs:
+  - https://mercury.com/
+  - https://clerk.com/
+  - https://attio.com/
+  - https://pitch.com/
+  - https://www.revolut.com/business/
+  - https://wise.com/
+restore: pre-ref-combo | quiet authority baseline'a dön | pre-wise-shell
+out_of_scope:
+  - fake stats / testimonials / logo walls
+  - grey mist / WhatsApp primary chrome / Revolut noise sitewide
+  - panel / Stripe / Prisma
+browser_qa:
+  - /tr hero + scope + bridge + packages
+ship: node scripts/pre-commit-guard.js

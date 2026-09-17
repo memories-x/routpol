@@ -1,0 +1,14 @@
+surface: landing-hero-demo
+references:
+  - "reuse: Quiet Authority product panel (existing hero chrome)"
+  - "reuse: Stripe rhythm PtReveal motion vocabulary"
+restore_phrase: "pre-hero-demo-scenes"
+snapshot: "_snapshots/2026-09-14-pre-hero-demo-scenes/"
+out_of_scope:
+  - packages section redesign
+  - inventing metrics / fake clients
+  - grey mist / purple glow
+success_criteria:
+  - "Hero demo cycles customer-view scenes for checkout services (+ trade line)"
+  - "Browser QA /tr desktop + narrow"
+  - "guard green"

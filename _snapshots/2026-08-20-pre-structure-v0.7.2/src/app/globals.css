@@ -1,0 +1,155 @@
+@import "tailwindcss";
+
+:root {
+  --pt-navy-950: #0b1220;
+  --pt-navy-900: #0f1c2e;
+  --pt-navy-800: #1a2b42;
+  --pt-navy-700: #243b5a;
+  --pt-navy-600: #2f4a6b;
+  --pt-navy-500: #3d5f87;
+  --pt-navy-400: #5a7da8;
+  --pt-navy-300: #8aa4c4;
+  --pt-navy-200: #b8c9dc;
+  --pt-navy-100: #dce6f0;
+  --pt-navy-50: #eef3f8;
+
+  --pt-slate-900: #0f172a;
+  --pt-slate-800: #1e293b;
+  --pt-slate-700: #334155;
+  --pt-slate-600: #475569;
+  --pt-slate-500: #64748b;
+  --pt-slate-400: #94a3b8;
+  --pt-slate-300: #cbd5e1;
+  --pt-slate-200: #e2e8f0;
+  --pt-slate-100: #f1f5f9;
+  --pt-slate-50: #f8fafc;
+
+  --pt-emerald-900: #064e3b;
+  --pt-emerald-800: #065f46;
+  --pt-emerald-700: #047857;
+  --pt-emerald-600: #059669;
+  --pt-emerald-500: #10b981;
+  --pt-emerald-400: #34d399;
+  --pt-emerald-300: #6ee7b7;
+  --pt-emerald-200: #a7f3d0;
+  --pt-emerald-100: #d1fae5;
+  --pt-emerald-50: #ecfdf5;
+
+  --pt-bg: #f8fafc;
+  --pt-surface: #ffffff;
+  --pt-surface-alt: #f1f5f9;
+  --pt-border: #e2e8f0;
+  --pt-teal-600: #0d9488;
+  --pt-whatsapp: #25d366;
+  --pt-danger: #dc2626;
+
+  /* Geri uyum: 0.8.x geri alımından kalan sınıf adları → navy paleti */
+  --pt-aws-ink: var(--pt-navy-950);
+  --pt-aws-800: var(--pt-navy-800);
+  --pt-aws-ink-dark: var(--pt-navy-900);
+}
+
+@theme inline {
+  --color-pt-navy-950: var(--pt-navy-950);
+  --color-pt-navy-900: var(--pt-navy-900);
+  --color-pt-navy-800: var(--pt-navy-800);
+  --color-pt-navy-700: var(--pt-navy-700);
+  --color-pt-navy-600: var(--pt-navy-600);
+  --color-pt-navy-500: var(--pt-navy-500);
+  --color-pt-navy-400: var(--pt-navy-400);
+  --color-pt-navy-300: var(--pt-navy-300);
+  --color-pt-navy-200: var(--pt-navy-200);
+  --color-pt-navy-100: var(--pt-navy-100);
+  --color-pt-navy-50: var(--pt-navy-50);
+
+  --color-pt-slate-900: var(--pt-slate-900);
+  --color-pt-slate-800: var(--pt-slate-800);
+  --color-pt-slate-700: var(--pt-slate-700);
+  --color-pt-slate-600: var(--pt-slate-600);
+  --color-pt-slate-500: var(--pt-slate-500);
+  --color-pt-slate-400: var(--pt-slate-400);
+  --color-pt-slate-300: var(--pt-slate-300);
+  --color-pt-slate-200: var(--pt-slate-200);
+  --color-pt-slate-100: var(--pt-slate-100);
+  --color-pt-slate-50: var(--pt-slate-50);
+
+  --color-pt-emerald-900: var(--pt-emerald-900);
+  --color-pt-emerald-800: var(--pt-emerald-800);
+  --color-pt-emerald-700: var(--pt-emerald-700);
+  --color-pt-emerald-600: var(--pt-emerald-600);
+  --color-pt-emerald-500: var(--pt-emerald-500);
+  --color-pt-emerald-400: var(--pt-emerald-400);
+  --color-pt-emerald-300: var(--pt-emerald-300);
+  --color-pt-emerald-200: var(--pt-emerald-200);
+  --color-pt-emerald-100: var(--pt-emerald-100);
+  --color-pt-emerald-50: var(--pt-emerald-50);
+
+  --color-pt-bg: var(--pt-bg);
+  --color-pt-surface: var(--pt-surface);
+  --color-pt-surface-alt: var(--pt-surface-alt);
+  --color-pt-border: var(--pt-border);
+  --color-pt-teal-600: var(--pt-teal-600);
+  --color-pt-whatsapp: var(--pt-whatsapp);
+  --color-pt-danger: var(--pt-danger);
+
+  --color-pt-aws-ink: var(--pt-aws-ink);
+  --color-pt-aws-800: var(--pt-aws-800);
+  --color-pt-aws-ink-dark: var(--pt-aws-ink-dark);
+
+  --font-sans: var(--font-source-sans);
+  --font-display: var(--font-source-serif);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+html {
+  scroll-padding-top: 4.5rem;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+body {
+  background: var(--pt-bg);
+  color: var(--pt-navy-950);
+  font-family: var(--font-source-sans), system-ui, sans-serif;
+}
+
+:focus-visible {
+  outline: 2px solid var(--pt-emerald-600);
+  outline-offset: 2px;
+}
+
+.sr-only-focusable:not(:focus):not(:focus-within) {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+.sr-only-focusable:focus,
+.sr-only-focusable:focus-within {
+  position: static;
+  width: auto;
+  height: auto;
+  margin: 0;
+  overflow: visible;
+  clip: auto;
+  white-space: normal;
+}

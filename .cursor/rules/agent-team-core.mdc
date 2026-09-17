@@ -1,0 +1,17 @@
+---
+description: AI agent team discipline — read AGENTS.md and master-rules before coding
+globs:
+alwaysApply: true
+---
+
+# Agent Team Core Rules
+
+1. Read `AGENTS.md`, `knowledge/agents/shared/master-rules.md`, and `operating-principles-compiled.md` first.
+2. Plans before multi-file work — Architect-01 independent review (R1).
+3. No emoji in agent output; use `[INFO]` / `[WARN]` / `[CRITICAL]`.
+4. After code changes: `node scripts/audit-sentinel.js --diff` and `node scripts/pre-commit-guard.js` when configured.
+5. Workflow modes: `.cursor/skills/dev-workflow/` and `.cursor/skills/team-dispatch/`
+6. **Public visuals:** `.cursor/skills/public-visual-qa/` + rule `public-visual-discipline.mdc` (Browser QA, one surface, references, snapshot)
+7. Resource discipline: borrow-and-return Docker/Node after tasks (R23, R25) — see `docs/guides/ResourceDiscipline.md`
+8. Team roster: `docs/wiki/TeamRoster.md`
+9. Scope lock: `ARCHITECT_TASKS.md` → `current_focus`

@@ -1,0 +1,34 @@
+{
+  "id": "test-discipline",
+  "title": "Test Coverage Discipline",
+  "description": "Critical modules (security, money flow, audit) must have test fixtures. Untested catch blocks hide bugs.",
+  "reference": "ac-daemon/scratch/",
+  "scope": "daemon",
+  "ext": [".ts"],
+  "rules": [
+    {
+      "id": "CATCH_LOGS_ONLY",
+      "pattern": "catch\\s*\\(\\s*\\w+(?::\\s*any)?\\s*\\)\\s*\\{\\s*(?:logger|console)\\.\\w+\\([^)]*\\)\\s*;?\\s*\\}",
+      "severity": "info",
+      "message": "Catch block only logs — error swallowed, caller treats as success.",
+      "remediation": "Either re-throw (`throw err`), return an error envelope, or document why swallowing is correct.",
+      "reference": "AGENTS.md"
+    },
+    {
+      "id": "ASYNC_WITHOUT_TRY",
+      "pattern": "static\\s+async\\s+\\w+\\s*\\([^)]*\\)[^{]*\\{\\s*(?!try)[\\s\\S]{0,300}await",
+      "severity": "info",
+      "message": "Static async method awaits without try/catch — unhandled rejection bubbles to caller.",
+      "remediation": "Wrap with try/catch and return structured error, or document that caller handles.",
+      "reference": "AGENTS.md"
+    },
+    {
+      "id": "RISKY_MODULE_NO_TEST",
+      "pattern": "export\\s+(class|function|const)\\s+(MarketplaceService|ProvisioningEngine|CVEFeedService|AuditLogger|DockerManager|DatabaseManager)",
+      "severity": "info",
+      "message": "High-risk module — verify scratch/test-* fixture exists and exercises new exports.",
+      "remediation": "Run: `ls ac-daemon/scratch/test-*.js` — every exported method should have at least one case.",
+      "reference": "ac-daemon/scratch/"
+    }
+  ]
+}

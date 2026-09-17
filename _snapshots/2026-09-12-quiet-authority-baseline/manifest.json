@@ -1,0 +1,29 @@
+﻿{
+    "id":  "2026-09-12-quiet-authority-baseline",
+    "createdAt":  "2026-09-12T18:56:11.5939973+02:00",
+    "label":  "Quiet Authority baseline (operator approved visual after modernize revert)",
+    "reason":  "Restore point before further visual experiments",
+    "restorePhrase":  [
+                          "geri don quiet authority",
+                          "quiet-authority-baseline",
+                          "2026-09-12 baseline"
+                      ],
+    "includes":  [
+                     "src",
+                     "public",
+                     "prisma",
+                     "docs",
+                     "scripts",
+                     "e2e",
+                     "canvases",
+                     "knowledge",
+                     "root config files"
+                 ],
+    "excludes":  [
+                     "node_modules",
+                     ".next",
+                     ".env",
+                     ".env.local",
+                     "git"
+                 ]
+}

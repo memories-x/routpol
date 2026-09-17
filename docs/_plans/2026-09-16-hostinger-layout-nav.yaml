@@ -1,0 +1,20 @@
+title: hostinger-layout-nav-tur1
+scope:
+  project: pol-turk
+  module: landing header mega-nav
+  out_of_scope:
+    - Hero / Packages / Process redesign
+    - globals.css token changes
+    - hPanel sidebar
+intent:
+  what: Hostinger-style grouped nav with dropdowns; ROUTEPOL colors kept
+  why: Operator liked Hostinger layout structure
+  triggered_by: plan hostinger_layout_nav
+restore_phrase: pre-hostinger-layout'a dön | quiet authority baseline'a dön
+browser_qa:
+  - /tr desktop — Hizmetler dropdown + descriptions
+  - /tr mobile 390 — hamburger + Hizmetler accordion
+success_criteria:
+  - Grouped nav TR/PL/EN
+  - Colors unchanged
+  - pre-commit-guard green

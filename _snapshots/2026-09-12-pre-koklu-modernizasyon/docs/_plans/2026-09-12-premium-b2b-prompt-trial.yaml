@@ -1,0 +1,60 @@
+title: Premium B2B visual redesign (prompt trial)
+scope:
+  project: pol-turk
+  module: public landing + hub chrome
+  out_of_scope:
+    - panel / API / Stripe / Prisma
+    - inventing clients stats awards testimonials
+    - purple gradients glassmorphism
+    - rewriting application architecture
+intent:
+  what: Implement prompt-driven premium international B2B visual/UX redesign on existing Quiet Authority IA.
+  why: Operator trial — apply prompt letter-for-letter; baseline snapshot exists for rollback.
+  triggered_by: user_request
+steps:
+  - order: 1
+    action: Design tokens + typography system (sans hierarchy, spacing, container)
+    files: [src/app/globals.css, src/app/layout.tsx, src/lib/ui-classes.ts]
+    risk: low
+  - order: 2
+    action: Header Footer BrandLockup premium chrome
+    files:
+      - src/components/landing/LandingHeader.tsx
+      - src/components/landing/LandingFooter.tsx
+      - src/components/brand/BrandLockup.tsx
+    risk: low
+  - order: 3
+    action: Hero Scope Bridge Packages Process FAQ Lead redesign
+    files:
+      - src/components/landing/LandingHero.tsx
+      - src/components/landing/LandingScope.tsx
+      - src/components/landing/LandingBridge.tsx
+      - src/components/landing/LandingPackages.tsx
+      - src/components/landing/LandingProcess.tsx
+      - src/components/landing/LandingLeadForm.tsx
+      - src/components/sections/Faq.tsx
+      - src/components/sections/SectionIntro.tsx
+    risk: medium
+  - order: 4
+    action: Hub parity + PageShell
+    files:
+      - src/app/[locale]/hizmetler/page.tsx
+      - src/components/ui/PageShell.tsx
+    risk: low
+dependencies: []
+side_effects: [visual-only public surfaces]
+rollback:
+  trigger: operator rejects look
+  steps:
+    - restore _snapshots/2026-09-12-quiet-authority-baseline per RESTORE.md
+success_criteria:
+  - Premium B2B look without SaaS clichés
+  - No invented trust metrics
+  - Existing IA and checkout paths preserved
+  - pre-commit-guard passes
+stop_conditions:
+  - Operator says geri dön / baseline
+estimated_effort: 90m
+risk_overall: medium
+operator_proceed: verbal prompt trial "harfi harfiye uyarla"
+restore_phrase: quiet authority baseline'a dön

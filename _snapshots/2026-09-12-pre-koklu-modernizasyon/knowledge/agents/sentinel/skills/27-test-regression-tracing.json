@@ -1,0 +1,42 @@
+{
+  "id": "test-regression-tracing",
+  "title": "Test Regression and Root Cause Tracing",
+  "description": "Detects patterns that indicate test regressions introduced by implementation changes: uncaught import errors, API surface breaks, missing dependency declarations, and logic drift. Source: mhattingpete/claude-skills-marketplace test-fixing skill, adapted for A-CyberSolutions TypeScript/Node stack.",
+  "reference": "knowledge/agents/shared/master-rules.md#R21 / ac-daemon/src/utils/errors.ts (errMessage pattern)",
+  "scope": "all",
+  "ext": [".ts", ".tsx", ".js"],
+  "rules": [
+    {
+      "id": "REGRESSION_MISSING_ERRMESSAGE",
+      "pattern": "catch\\s*\\(.*err.*\\)\\s*\\{[^}]*\\.message\\b",
+      "severity": "warn",
+      "message": "Direct .message access on caught error. Use errMessage(e) utility — raw Error.message fails on non-Error throws (strings, objects).",
+      "remediation": "Replace `err.message` with `errMessage(err)` from '../utils/errors'. This is the project standard, prevents TypeError on non-Error exceptions.",
+      "reference": "ac-daemon/src/utils/errors.ts"
+    },
+    {
+      "id": "REGRESSION_UNGUARDED_ARRAY_INDEX",
+      "pattern": "\\[0\\]\\s*\\.|\\[0\\]\\s*\\?\\.",
+      "severity": "info",
+      "message": "Direct array[0] access without length guard. If array is empty, this produces undefined and causes downstream TypeError.",
+      "remediation": "Add length check: `if (arr.length > 0) { arr[0].x }` or use optional chaining with nullish: `arr[0]?.x ?? fallback`.",
+      "reference": "AGENTS.md -> Defensive Frontend"
+    },
+    {
+      "id": "REGRESSION_HARDCODED_TIMEOUT",
+      "pattern": "setTimeout\\s*\\(.*,\\s*(?!1000|2000)[0-9]{4,}\\s*\\)",
+      "severity": "warn",
+      "message": "Hardcoded long timeout detected. Long timeouts hide real failures and slow down test suites. Use Promise.race with explicit timeout and rejection.",
+      "remediation": "Replace with Promise.race([operation, new Promise((_, rej) => setTimeout(() => rej(new Error('timeout')), N))]). Makes timeout observable.",
+      "reference": "ac-daemon/src/services/MasteryEngine.ts (Promise.race pattern)"
+    },
+    {
+      "id": "REGRESSION_REEXPORT_ANY",
+      "pattern": "export\\s+\\*\\s+from|module\\.exports\\s*=\\s*require",
+      "severity": "info",
+      "message": "Barrel re-export or CommonJS require detected. These can cause circular dependency issues and make import tracing difficult during regression debugging.",
+      "remediation": "Use explicit named exports. If barrel is necessary, document the dependency order to prevent circular import regression.",
+      "reference": "AGENTS.md -> TypeScript (verbatimModuleSyntax aktif)"
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+id: 2026-09-12-koklu-quiet-authority
+surface: landing-shell + hub (operator: köklü modernizasyon)
+goal: Quiet Authority DNA ile kökü modernizasyon — serif/emerald/açık zemin; steril B2B ve gri sis yok
+restore: pre-koklu snapshot | quiet authority baseline'a dön
+refs:
+  - Quiet Authority (belge köprüsü) — product DNA
+  - Stripe marketing restraint (type + whitespace)
+  - Linear clarity (nav + section rhythm)
+out_of_scope:
+  - grey mist / purple glow / cream-terracotta
+  - invented trust metrics
+  - WhatsApp as primary chrome
+  - package SKU / sale rule changes
+browser_qa:
+  - /tr desktop + mobile
+  - /tr/hizmetler desktop
+ship: node scripts/pre-commit-guard.js

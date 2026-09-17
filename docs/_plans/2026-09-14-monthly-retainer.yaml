@@ -1,0 +1,12 @@
+# Surface: monthly package commercial rule (copy + kanon)
+surface: monthly-retainer-copy
+references:
+  - "operator: aylık abonelik sürekli ticaret; işlem olmasa da dönem ücreti"
+restore_phrase: "pre-apple-copy"
+out_of_scope:
+  - Stripe Subscription auto-charge implementation (gap — report only)
+  - layout / motion
+success_criteria:
+  - "Kanon + TR/PL/EN priceNote + FAQ: dönem ücreti yazı/işlem olmasa da alınır; kota iadesi yok"
+  - "Public copy does not claim card auto-charge until Stripe Subscription ships"
+  - "guard green"

@@ -1,0 +1,55 @@
+{
+  "id": "complexity-budget",
+  "title": "Complexity Budget",
+  "description": "Function length, nesting depth, parameter count — cognitive load göstergeleri.",
+  "reference": "Code complexity heuristics",
+  "scope": "any",
+  "ext": [".ts", ".tsx", ".js"],
+  "rules": [
+    {
+      "id": "DEEP_NESTING_5",
+      "pattern": "(?:^[\\t ]+){10,}",
+      "flags": "gm",
+      "severity": "info",
+      "message": "10+ seviye indentation — büyük olasılıkla 5+ derinlikte nested logic. Cognitive load yüksek.",
+      "remediation": "Erken return (guard clauses) kullan. Veya iç bloku ayrı fonksiyona çıkar.",
+      "reference": "Code complexity"
+    },
+    {
+      "id": "LONG_PARAMETER_LIST",
+      "pattern": "function\\s+\\w+\\s*\\([^)]{200,}\\)",
+      "flags": "g",
+      "severity": "info",
+      "message": "Fonksiyon parametre listesi 200+ karakter — muhtemelen 5+ parametre.",
+      "remediation": "Options object pattern: `function foo(opts: { a, b, c, d, e })`. İsim okunabilirliği + opsiyonel default.",
+      "reference": "Refactoring catalog — Long Parameter List"
+    },
+    {
+      "id": "BIG_SWITCH_CASE",
+      "pattern": "switch\\s*\\([^)]+\\)\\s*\\{(?:[^{}]*case\\s+){8,}",
+      "flags": "g",
+      "severity": "info",
+      "message": "8+ case'li switch — Map/Object lookup veya polymorphism daha sürdürülebilir olabilir.",
+      "remediation": "const handlers = { case1: fn1, case2: fn2 }; handlers[key]?.() — extension açık.",
+      "reference": "Refactoring catalog — Replace Conditional with Polymorphism"
+    },
+    {
+      "id": "FUNCTION_BODY_TOO_LONG",
+      "pattern": "(?:function\\s+\\w+|const\\s+\\w+\\s*=[^;]*=>)\\s*\\{(?:[^{}]|\\{(?:[^{}]|\\{[^{}]*\\})*\\}){2000,}",
+      "flags": "g",
+      "severity": "info",
+      "message": "Function body 2000+ karakter — muhtemelen 80+ satır. Tek sorumluluk ihlali.",
+      "remediation": "Alt fonksiyonlara böl. Her fonksiyon tek konu yapsın.",
+      "reference": "Refactoring catalog — Long Function"
+    },
+    {
+      "id": "TERNARY_NESTED",
+      "pattern": "\\?[^?:]{0,80}\\?[^?:]{0,80}\\?",
+      "flags": "g",
+      "severity": "warn",
+      "message": "Nested ternary — okunabilirlik kayıp. 2'den fazla seviye = if/else veya lookup tablosu.",
+      "remediation": "if/else'e dönüştür veya helper fonksiyona taşı.",
+      "reference": "Code complexity"
+    }
+  ]
+}

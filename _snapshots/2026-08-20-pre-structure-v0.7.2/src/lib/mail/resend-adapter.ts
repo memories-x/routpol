@@ -1,0 +1,51 @@
+import { getContactEmailTo } from "@/lib/env";
+import type { QuoteMailAdapter, QuoteNotification } from "./quote-mail";
+import { noopQuoteMailAdapter } from "./quote-mail";
+
+/**
+ * Resend HTTP API — no SDK required.
+ * Enable with RESEND_API_KEY + CONTACT_EMAIL_TO (+ optional CONTACT_EMAIL_FROM).
+ */
+export const resendQuoteMailAdapter: QuoteMailAdapter = {
+  async sendQuoteNotification(payload: QuoteNotification) {
+    const apiKey = process.env.RESEND_API_KEY;
+    const to = getContactEmailTo();
+    const from =
+      process.env.CONTACT_EMAIL_FROM ?? "POL-TURK <onboarding@resend.dev>";
+
+    if (!apiKey || !to) {
+      await noopQuoteMailAdapter.sendQuoteNotification(payload);
+      return;
+    }
+
+    const subject = `[POL-TURK Teklif] ${payload.serviceType} — ${payload.fullName}`;
+    const text = [
+      `ID: ${payload.id}`,
+      `Ad: ${payload.fullName}`,
+      `E-posta: ${payload.email}`,
+      `Telefon: ${payload.phone}`,
+      `Hizmet: ${payload.serviceType}`,
+      `Mesaj: ${payload.message ?? "-"}`,
+    ].join("\n");
+
+    const res = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        from,
+        to: [to],
+        subject,
+        text,
+      }),
+    });
+
+    if (!res.ok) {
+      const body = await res.text();
+      console.error("[quote-mail:resend]", res.status, body);
+      throw new Error("QUOTE_MAIL_FAILED");
+    }
+  },
+};

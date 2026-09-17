@@ -1,0 +1,17 @@
+id: 2026-09-12-dosya-masasi
+surface: hero + packages (operator: önceki modernizasyonu beğenmedi, başka dene)
+direction: Dosya Masası — sağda full-bleed navy dosya paneli; paketler kart değil ledger satır
+restore: quiet authority baseline'a dön
+refs:
+  - Quiet Authority DNA (serif, emerald CTA, belge metaforu)
+  - Gov/admin dossier contrast (dark file panel vs light copy)
+  - Stripe pricing list restraint (row, not card wall)
+out_of_scope:
+  - grey mist / purple / cream-terracotta
+  - steril navy whole-site B2B
+  - Quiet Authority 2.0 soft blur + card polish (rejected)
+  - invented trust
+browser_qa:
+  - /tr desktop + mobile
+  - /tr#paketler
+ship: node scripts/pre-commit-guard.js

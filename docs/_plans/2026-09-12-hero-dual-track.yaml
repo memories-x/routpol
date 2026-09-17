@@ -1,0 +1,20 @@
+plan_id: 2026-09-12-hero-dual-track
+surface: Landing Hero only
+intent: >-
+  Ana sayfada çekirdek iş (yazı özeti / paketler) birincil kalsın;
+  ticaret aracılığı “ikinci hat / ikinci isim” olarak hafif belirtisin.
+  İlk etap gelir: yazı paketleri — eşit çift CTA yok.
+references:
+  - same as last (Wise shell + Quiet Authority)
+  - https://wise.com/
+restore_phrase: "quiet authority baseline'a dön"
+restore_snapshot: _snapshots/2026-09-12-quiet-authority-baseline/
+out_of_scope:
+  - Scope, Bridge, Packages, Process, FAQ, Lead redesign
+  - New Stripe SKU for trade desk
+  - Full ticaret masası page (T1)
+success_criteria:
+  - Hero: primary CTA packages / core path
+  - Secondary micro-line for ticaret aracılığı (not equal weight)
+  - Browser QA /tr desktop + ~390px
+  - pre-commit-guard green

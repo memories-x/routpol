@@ -1,0 +1,17 @@
+# Optional local Postgres. Agent does not start Docker.
+# Live database: Plesk → Databases → PostgreSQL (docs/04-go-live.md).
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: polturk
+      POSTGRES_PASSWORD: dev
+      POSTGRES_DB: polturk
+    ports:
+      - "5432:5432"
+    volumes:
+      - polturk_pg:/var/lib/postgresql/data
+
+volumes:
+  polturk_pg:

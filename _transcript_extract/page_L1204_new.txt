@@ -1,0 +1,3 @@
+      <Hero content={content} locale={locale} />
+      <SocialProof content={content} />
+      <Services content={content} locale={locale} />

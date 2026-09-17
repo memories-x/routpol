@@ -1,0 +1,42 @@
+{
+  "id": "tdd-compliance",
+  "title": "Test-Driven Development Compliance",
+  "description": "Detects production code added without corresponding test coverage, test files that appear after implementation files (test-after pattern), and common TDD anti-patterns. Source: obra/superpowers TDD skill, adapted to A-CyberSolutions TypeScript/Node stack.",
+  "reference": "knowledge/agents/shared/master-rules.md#R17 / ac-daemon/scratch/ (test fixture directory)",
+  "scope": "all",
+  "ext": [".ts", ".tsx", ".js"],
+  "rules": [
+    {
+      "id": "TDD_MOCK_OVER_REAL",
+      "pattern": "jest\\.fn\\(\\).*mockResolvedValueOnce|jest\\.fn\\(\\).*mockRejectedValueOnce",
+      "severity": "warn",
+      "message": "Mocking return values instead of testing real behavior. TDD principle: test real code, not mock behavior.",
+      "remediation": "Replace mock chain with a real stub or fixture. Only mock at system boundaries (network, filesystem, Docker socket).",
+      "reference": "obra/superpowers/skills/test-driven-development#testing-anti-patterns"
+    },
+    {
+      "id": "TDD_VAGUE_TEST_NAME",
+      "pattern": "\\btest\\s*\\(\\s*['\"]test\\d*['\"]|\\bit\\s*\\(\\s*['\"]test\\d*['\"]|\\btest\\s*\\(\\s*['\"]works['\"]|\\bit\\s*\\(\\s*['\"]works['\"]",
+      "severity": "warn",
+      "message": "Vague test name detected. Test names must describe the behavior being verified, not the mechanism.",
+      "remediation": "Rename to describe the specific behavior: 'rejects empty email', 'retries failed operations 3 times', etc.",
+      "reference": "obra/superpowers/skills/test-driven-development#good-tests"
+    },
+    {
+      "id": "TDD_TODO_IN_TEST",
+      "pattern": "//\\s*(TODO|FIXME|LATER|SKIP).*test|it\\.skip\\(|test\\.skip\\(|describe\\.skip\\(",
+      "severity": "warn",
+      "message": "Skipped or deferred test detected. R17: Zero Technical Debt — deferred tests are invisible regression risks.",
+      "remediation": "Either implement the test now or move the gap to docs/wiki/ActiveTasks.md as a backlog item. Remove skip marker.",
+      "reference": "knowledge/agents/shared/master-rules.md#R17"
+    },
+    {
+      "id": "TDD_CATCH_ALL_IN_TEST",
+      "pattern": "catch\\s*\\(.*\\)\\s*\\{\\s*\\}|catch\\s*\\(.*\\)\\s*\\{\\s*//",
+      "severity": "warn",
+      "message": "Empty or comment-only catch block in test file. Silent failures in tests hide real bugs.",
+      "remediation": "Assert on the caught error or use expect(() => ...).toThrow(). Never swallow exceptions in tests.",
+      "reference": "knowledge/agents/shared/master-rules.md#R21"
+    }
+  ]
+}

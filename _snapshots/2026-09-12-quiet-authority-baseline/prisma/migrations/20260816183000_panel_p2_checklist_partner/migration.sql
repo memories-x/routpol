@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "Case" ADD COLUMN IF NOT EXISTS "lawyerPartner" TEXT;
+ALTER TABLE "Case" ADD COLUMN IF NOT EXISTS "checklist" JSONB;

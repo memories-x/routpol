@@ -1,0 +1,55 @@
+{
+  "id": "logging-discipline",
+  "title": "Logging & PII Discipline",
+  "description": "Doğru log seviyesi, PII leak yok, log injection yok, structured logging.",
+  "reference": "AGENTS.md → workflow hygiene",
+  "scope": "any",
+  "ext": [".ts", ".tsx", ".js"],
+  "rules": [
+    {
+      "id": "CONSOLE_LOG_PROD",
+      "pattern": "(?<!//.*)console\\.log\\s*\\(",
+      "severity": "warn",
+      "message": "console.log production'a sızar — debug noise. logger.debug / logger.info kullan (daemon) veya tamamen kaldır (panel).",
+      "remediation": "Daemon'da: logger.info(...). Panel'de: kaldır veya console.error sadece catch içinde.",
+      "reference": "AGENTS.md"
+    },
+    {
+      "id": "LOG_PII_PASSWORD",
+      "pattern": "(?:logger|console)\\.\\w+\\s*\\([^)]*(?:password|secret|token|apiKey|jwt|authorization)\\s*[:,)]",
+      "flags": "gi",
+      "severity": "error",
+      "message": "Log satırında potansiyel secret/PII — şifre/token loglara sızıyor olabilir.",
+      "remediation": "Secret'ı `[REDACTED]` ile değiştir veya hash'le. Audit log için ayrı path kullan.",
+      "reference": "OWASP A09 — Logging failures"
+    },
+    {
+      "id": "LOG_USER_INPUT_RAW",
+      "pattern": "(?:logger|console)\\.\\w+\\s*\\([^)]*(?:req\\.body|req\\.query|req\\.params)",
+      "flags": "g",
+      "severity": "warn",
+      "message": "User input direkt log'a yazılıyor — log injection veya PII leak riski.",
+      "remediation": "Log'lamadan önce sanitize: `JSON.stringify(input).slice(0, 200)`. Veya schema-validated kısımları logla.",
+      "reference": "OWASP — log injection",
+      "scope": "daemon"
+    },
+    {
+      "id": "MISSING_LOG_CONTEXT",
+      "pattern": "logger\\.(error|warn)\\s*\\(\\s*['\"`][a-z]",
+      "flags": "g",
+      "severity": "info",
+      "message": "Error/warn log küçük harfle başlıyor — operatör için context eksik (modül adı vs).",
+      "remediation": "Prefix kullan: `logger.error('[MarketplaceService] download failed:', errMessage(e))`.",
+      "reference": "Logging best practices"
+    },
+    {
+      "id": "STRINGIFY_ERROR_OBJECT",
+      "pattern": "JSON\\.stringify\\s*\\(\\s*\\w+\\s*\\)[\\s\\S]{0,80}?(?:error|catch)",
+      "flags": "gi",
+      "severity": "info",
+      "message": "JSON.stringify(error) genelde `{}` döner çünkü Error objesinin non-enumerable property'leri var.",
+      "remediation": "errMessage(e) helper kullan. Veya `JSON.stringify(e, Object.getOwnPropertyNames(e))`.",
+      "reference": "src/utils/errors.ts"
+    }
+  ]
+}

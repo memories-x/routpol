@@ -1,0 +1,14 @@
+# Surface: landing copy — Apple-quality corporate voice (identity unchanged)
+surface: landing-copy
+references:
+  - "reuse: Quiet Authority"
+  - "operator: Apple-quality corporate language for TR→PL admin tracking"
+restore_phrase: "pre-apple-copy"
+snapshot: "_snapshots/2026-09-14-pre-apple-copy/"
+out_of_scope:
+  - layout / motion redesign
+  - inventing metrics
+success_criteria:
+  - "Hero/bridge/FAQ read spare, precise, corporate"
+  - "Browser QA /tr"
+  - "guard green"

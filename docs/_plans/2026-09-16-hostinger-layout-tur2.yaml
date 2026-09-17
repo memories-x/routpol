@@ -1,0 +1,22 @@
+title: hostinger-layout-tur2
+scope:
+  project: pol-turk
+  module: landing audiences + packages rhythm
+  out_of_scope:
+    - Hero redesign
+    - Process / FAQ / Footer
+    - Color token changes
+intent:
+  what: Hostinger tools-grid audiences + Plans-and-prices packages scale
+  why: Operator approved Tur 2
+  triggered_by: operator_approval
+restore_phrase: pre-hostinger-tur2'ye dön | quiet authority baseline'a dön
+browser_qa:
+  - /tr#kim-icin desktop
+  - /tr#paketler desktop
+  - /tr mobile narrow
+success_criteria:
+  - Audiences section live with 4 lanes
+  - Packages header Hostinger scale
+  - Colors unchanged
+  - guard green

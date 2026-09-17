@@ -1,0 +1,18 @@
+# Surface: /danismanlik + kanon 01 — trade desk core + optional PL ops
+surface: danismanlik
+references:
+  - "reuse: Treximpol tracks structure (prior tur)"
+  - "operator brief 2026-09-13: market research, firm ID, meetings, price collect; per-service invoice; optional PL procurement+logistics; customs via partner agencies"
+restore_phrase: "pre-ops-extent"
+snapshot: "_snapshots/2026-09-13-pre-ops-extent/"
+out_of_scope:
+  - landing hero redesign
+  - packages / Stripe SKUs for trade
+  - public commission %
+  - named customs agencies / invented trust metrics
+success_criteria:
+  - "/tr/danismanlik shows core 4 services + billing + optional ops + partner customs"
+  - "limits: not licensed customs broker / not lawyer; logistics = mandate + partners"
+  - "docs/01-is-modeli.md aligns"
+  - "Browser QA /tr/danismanlik"
+  - "pre-commit-guard green"

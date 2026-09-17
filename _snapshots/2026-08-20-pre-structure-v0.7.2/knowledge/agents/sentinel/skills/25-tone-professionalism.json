@@ -1,0 +1,42 @@
+{
+  "id": "tone-professionalism",
+  "title": "AI Response Tone and Professionalism Enforcement",
+  "description": "Detects emoji characters, forbidden enthusiasm phrases, and unprofessional tone markers in AI-generated output, comments, and string literals. Enforces AGENTS.md Rule 3.J and master-rules.md R5.",
+  "reference": "AGENTS.md#3J / knowledge/agents/shared/master-rules.md#R5",
+  "scope": "all",
+  "ext": [".ts", ".tsx", ".js", ".jsx", ".md"],
+  "rules": [
+    {
+      "id": "EMOJI_IN_CODE",
+      "pattern": "[\uD83C\uDF00-\uD83E\uDDFF\u2600-\u26FF\u2700-\u27BF\uD83C\uDC00-\uD83C\uDC2F\uD83C\uDCA0-\uD83C\uDCFF\uD83C\uDD00-\uD83C\uDDFF\uD83C\uDE00-\uD83C\uDEFF\uD83C\uDF00-\uD83C\uDFFF\u3030\u2B50\u2B55\u2934-\u2935\u2B05-\u2B07\u2B1B-\u2B1C\u3297\u3299\u00A9\u00AE\u2122\u23F3\u24C2\u23E9-\u23F3\u25AA-\u25AB\u25B6\u25C0\u25FB-\u25FE\u2614-\u2615\u2648-\u2653\u267F\u2693\u26A1\u26AA-\u26AB\u26BD-\u26BE\u26C4-\u26C5\u26CE\u26D4\u26EA\u26F2-\u26F3\u26F5\u26FA\u26FD\u2702\u2705\u2708-\u270D\u270F]",
+      "severity": "error",
+      "message": "Emoji character detected in source. AGENTS.md Rule 3.J: Zero Emoji policy. No emoji under any circumstance.",
+      "remediation": "Remove the emoji. Use [CRITICAL], [SUCCESS], [INFO], [WARN], [ERROR] text tags for emphasis.",
+      "reference": "AGENTS.md#3J"
+    },
+    {
+      "id": "FORBIDDEN_ENTHUSIASM_TR",
+      "pattern": "\\b(harika|mükemmel|muhteşem|ihtişam|şaşırtıcı|muazzam|başım üstüne|emriniz başım üstüne|otonomiyi şaha|zafer|şölen)\\b",
+      "severity": "warn",
+      "message": "Forbidden enthusiasm phrase detected. AGENTS.md Rule 3.J: Strictly professional tone required.",
+      "remediation": "Replace with data-driven, mechanical description. Remove emotional qualifiers entirely.",
+      "reference": "knowledge/agents/shared/master-rules.md#R5"
+    },
+    {
+      "id": "FORBIDDEN_ENTHUSIASM_EN",
+      "pattern": "\\b(amazing|fantastic|wonderful|awesome|brilliant|outstanding|superb|incredible|phenomenal|God-Tier|Apple-Grade)\\b",
+      "severity": "warn",
+      "message": "Forbidden enthusiasm phrase detected in English. Strictly professional tone required.",
+      "remediation": "Replace with factual, technical description.",
+      "reference": "knowledge/agents/shared/master-rules.md#R5"
+    },
+    {
+      "id": "HARDCODED_PRAISE_COMMENT",
+      "pattern": "\\/\\/.*\\b(harika|mükemmel|muazzam|God-Tier)\\b",
+      "severity": "warn",
+      "message": "Forbidden praise detected in code comment. Comments must be technical, not evaluative.",
+      "remediation": "Rewrite the comment as a technical description of what the code does.",
+      "reference": "AGENTS.md#3J"
+    }
+  ]
+}

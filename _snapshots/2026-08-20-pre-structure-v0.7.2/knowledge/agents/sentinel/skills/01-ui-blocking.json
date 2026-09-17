@@ -1,0 +1,34 @@
+{
+  "id": "ui-blocking",
+  "title": "Native UI Blocking Calls",
+  "description": "Browser-native prompt/alert/confirm discouraged in SPA/Electron — use inline modal/toast. Enable via project.invariants.yaml → frontend.forbidden_ui_calls.",
+  "reference": "project.invariants.yaml → frontend",
+  "scope": "any",
+  "ext": [".ts", ".tsx", ".js", ".jsx", ".vue"],
+  "rules": [
+    {
+      "id": "UI_PROMPT",
+      "pattern": "\\bprompt\\s*\\(",
+      "severity": "error",
+      "message": "Native prompt() blocks renderer and breaks UX/i18n patterns.",
+      "remediation": "Use a modal/dialog component with controlled input state.",
+      "reference": "PROJECT_CHARTER.md → frontend"
+    },
+    {
+      "id": "UI_ALERT",
+      "pattern": "\\balert\\s*\\(",
+      "severity": "error",
+      "message": "Native alert() blocks UI thread — use toast/inline notice.",
+      "remediation": "Use project toast/notification component or inline flash banner.",
+      "reference": "PROJECT_CHARTER.md → frontend"
+    },
+    {
+      "id": "UI_CONFIRM",
+      "pattern": "\\bconfirm\\s*\\(",
+      "severity": "error",
+      "message": "Native confirm() blocks UI — use explicit confirm modal.",
+      "remediation": "Use modal with confirm/cancel actions.",
+      "reference": "PROJECT_CHARTER.md → frontend"
+    }
+  ]
+}

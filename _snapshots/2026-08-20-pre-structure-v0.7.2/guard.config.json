@@ -1,0 +1,13 @@
+{
+  "typescriptProjects": [
+    {
+      "name": "web",
+      "cwd": ".",
+      "command": "npx tsc --noEmit"
+    }
+  ],
+  "sentinel": {
+    "args": ["--all"]
+  },
+  "skipIfMissing": true
+}

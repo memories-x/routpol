@@ -1,0 +1,62 @@
+title: hero-demo structural debt closeout
+scope:
+  project: pol-turk
+  module: landing/hero-demo
+  out_of_scope:
+    - LandingScope Bridge Packages Process FAQ Lead redesign
+    - supportTrack relocation
+    - full landing.ts locale file split
+    - portal real UI embed
+intent:
+  what: Close hero-demo structural debt (content module, panel extract, scene CTA, playback cleanup) without redesign.
+  why: Operator asked to finish listed modernization debts in order; avoid sync drift and LandingHero bloat.
+  triggered_by: user_request
+steps:
+  - order: 1
+    action: Snapshot touched surfaces + write plan
+    files: [_snapshots/2026-09-14-pre-hero-demo-debt/, docs/_plans/2026-09-14-hero-demo-debt.yaml]
+    risk: low
+  - order: 2
+    action: Extract TR/PL/EN demo + types + canonical hrefs to landing-hero-demo.ts; wire landing.ts
+    files: [src/content/landing-hero-demo.ts, src/content/landing.ts]
+    risk: medium
+  - order: 3
+    action: Extract HeroDemoPanel + useHeroDemoPlayback; slim LandingHero
+    files: [src/components/landing/HeroDemoPanel.tsx, src/hooks/useHeroDemoPlayback.ts, src/components/landing/LandingHero.tsx]
+    risk: medium
+  - order: 4
+    action: Soft CTA per scene → package/advisory href
+    files: [src/content/landing-hero-demo.ts, src/components/landing/HeroDemoPanel.tsx]
+    risk: low
+  - order: 5
+    action: Playback via async delay + generation cancel (same UX)
+    files: [src/hooks/useHeroDemoPlayback.ts]
+    risk: low
+  - order: 6
+    action: pre-commit-guard + Browser QA /tr hero only
+    files: []
+    risk: low
+dependencies: []
+side_effects: [public hero demo markup gains soft CTA link]
+rollback:
+  trigger: guard fail or operator rejects visual
+  steps:
+    - restore phrase pre-hero-demo-debt
+    - or node scripts/restore-snapshot.js 2026-09-14-pre-hero-demo-debt
+success_criteria:
+  - demo content lives in landing-hero-demo.ts; landing.ts imports it
+  - LandingHero no longer owns playback timers
+  - each scene has href+ctaLabel; CTA visible after ready
+  - Browser QA /tr desktop+narrow: carousel + CTA + reduced motion path
+  - node scripts/pre-commit-guard.js green
+stop_conditions:
+  - Quiet Authority token/atmosphere sweep requested mid-tur
+  - hydration break on hero
+estimated_effort: 45
+risk_overall: low
+disk_impact: none
+disk_borrow: n/a
+disk_return: n/a
+disk_verify: node scripts/pre-commit-guard.js
+restore_phrase: pre-hero-demo-debt
+references: same as last (Quiet Authority baseline; no new aesthetic)

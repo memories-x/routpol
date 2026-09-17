@@ -1,0 +1,101 @@
+# project.invariants.yaml — POL-TURK
+
+project:
+  name: "POL-TURK"
+  description: "Köprü operasyonu — dilinizde bilgilendirme, koordinasyon, takip; hukuk avukat ortağında. Web + panel."
+
+modules:
+  web:
+    path: src
+    role: "Landing, checkout, customer case page, APIs"
+  panel:
+    path: src/app/panel
+    role: "Köprü Operasyon Paneli (CRM)"
+  prisma:
+    path: prisma
+    role: "Customer / Case / Document / Note / LawyerPartner"
+  docs:
+    path: docs
+    role: "Ürün planı, olgunluk, go-live"
+
+api:
+  enabled: true
+  envelope:
+    success_key: success
+    data_key: data
+    error_key: error
+
+network:
+  canonical_host: localhost
+  canonical_port: 3000
+  forbidden_ports: []
+
+routing:
+  static_before_dynamic: true
+
+frontend:
+  defensive_arrays: true
+  forbidden_ui_calls:
+    - prompt
+    - alert
+    - confirm
+
+design:
+  enabled: true
+  token_prefix: "pt-"
+  tokens:
+    navy_950: "#0B1220"
+    navy_900: "#0F1C2E"
+    bg: "#F8FAFC"
+    surface: "#FFFFFF"
+    emerald_600: "#059669"
+    whatsapp: "#25D366"
+  fonts:
+    display: "Source Serif 4"
+    body: "Source Sans 3"
+  forbidden_hex_patterns: []
+
+brand:
+  enabled: true
+  public_name: "POL-TURK"
+  tagline: "Avukatın yürüttüğü süreçte köprü — dilinizde bilgilendirme"
+  positioning_doc: "docs/01-is-modeli.md"
+  forbidden_claims:
+    - "hukuki süreci yönetiyoruz"
+    - "avukatlarımız aracılığıyla her şeyi biz"
+  forbidden_strings:
+    - "Architect-01"
+    - "Sentinel"
+    - "ai-agent-team"
+    - "Antigravity"
+
+security:
+  download_url_guard: false
+  no_eval: true
+  panel_auth: "PANEL_PASSWORD + PANEL_AUTH_SECRET cookie"
+  customer_auth: "Customer.passwordHash argon2 + CUSTOMER_AUTH_SECRET cookie; magic link = reset"
+
+quality:
+  min_sentinel_score: 85
+  changelog_required: true
+
+resource_discipline:
+  enabled: false
+  borrow_return_required: false
+  reference: "docs/guides/ResourceDiscipline.md"
+
+product:
+  current_phase: "bridge-ops"
+  phase_name: "Köprü operasyon paneli P2 — olgunluk D→C (şirket yüzü)"
+  code_allowed: true
+  locales_v1: ["tr", "pl", "en"]
+  locales_target: ["tr", "pl", "en"]
+  business_model: "bridge"
+  packages: ["tek-yazi", "aylik-paket", "surec-yonetimi", "telefon-gorusme"]
+  out_of_scope:
+    - "MOS/praca.gov automation (rehber/mos bilgilendirme OK)"
+    - "USCIS/form fill library"
+    - "billable hours / trust accounting"
+  no_phase_skip: true
+  maturity_doc: "docs/46-kurumsal-olgunluk-skorkarti.md"
+  charter_aligned_at: "2026-08-16"

@@ -1,0 +1,27 @@
+# Surface: public shell motion/rhythm — Stripe craft adapted to Quiet Authority
+surface: landing-shell + danismanlik (structure preserved)
+references:
+  - "https://stripe.com/ (section rhythm, easing, product-panel craft, CTA micro-motion)"
+  - "reuse: Quiet Authority tokens + existing Bridge/Process framer"
+restore_phrase: "pre-stripe-rhythm"
+snapshot: "_snapshots/2026-09-13-pre-stripe-rhythm/"
+keep:
+  - LandingPage section order
+  - Quiet Authority colors / serif display / emerald CTA
+  - no purple / grey mist / glassmorphism / soft-blur card walls / fake stats
+borrow_from_stripe:
+  - cubic-bezier craft + scroll reveal once
+  - hero radial ambient (emerald/navy only)
+  - product panel shadow depth
+  - primary CTA lift micro-interaction
+  - shared PtReveal utility
+out_of_scope:
+  - Stripe brand clone / blue purple gradients
+  - invented metrics / logo walls
+  - rewriting content architecture
+  - checkout flow changes
+success_criteria:
+  - "/tr hero ambient + CTA hover; section reveals"
+  - "/tr/danismanlik reveal rhythm"
+  - "structure unchanged"
+  - "Browser QA + pre-commit-guard"

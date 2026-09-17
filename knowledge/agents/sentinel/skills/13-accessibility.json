@@ -1,0 +1,42 @@
+{
+  "id": "accessibility",
+  "title": "Accessibility (a11y) Basics",
+  "description": "Operator panel must be keyboard-navigable and screen-reader friendly. Cyber theatrics ≠ a11y.",
+  "reference": "WAI-ARIA",
+  "scope": "panel",
+  "ext": [".tsx", ".jsx"],
+  "rules": [
+    {
+      "id": "DIV_CLICK_NO_BUTTON",
+      "pattern": "<div[^>]*onClick=",
+      "severity": "warn",
+      "message": "<div onClick> is not keyboard-accessible — Tab/Enter ignore it.",
+      "remediation": "Use <button> for actions. Style with className, not by replacing the element.",
+      "reference": "WAI-ARIA — Buttons"
+    },
+    {
+      "id": "ICON_BUTTON_NO_LABEL",
+      "pattern": "<button(?![^>]*aria-label)(?![^>]*title=)[^>]*>\\s*<[A-Z][a-zA-Z]*\\s+(size|className)",
+      "severity": "warn",
+      "message": "Icon-only <button> without aria-label or title — screen reader announces nothing.",
+      "remediation": "Add aria-label=\"verb the object\" (e.g. aria-label=\"Restart server\").",
+      "reference": "WAI-ARIA"
+    },
+    {
+      "id": "IMG_NO_ALT",
+      "pattern": "<img\\s+(?![^>]*\\balt\\s*=)[^>]+/?>",
+      "severity": "warn",
+      "message": "<img> without alt attribute — fails screen readers.",
+      "remediation": "Add alt=\"description\". For decorative use alt=\"\" (empty, not missing).",
+      "reference": "WAI-ARIA"
+    },
+    {
+      "id": "INPUT_NO_LABEL",
+      "pattern": "<input(?![^>]*(aria-label|placeholder|id=\"[^\"]*\"\\s*[^>]*<label\\s+htmlFor))[^>]*type=\"(?!hidden)",
+      "severity": "info",
+      "message": "<input> without aria-label / placeholder / linked <label> — screen reader has no context.",
+      "remediation": "Either id + <label htmlFor=\"...\">, or aria-label on the input.",
+      "reference": "WAI-ARIA"
+    }
+  ]
+}

@@ -1,0 +1,41 @@
+title: enable Stripe Subscription auto-renew
+scope:
+  project: pol-turk
+  module: stripe-subscription
+  out_of_scope:
+    - Stripe Dashboard Price IDs (use price_data recurring)
+    - Customer portal cancel UI (webhook deleted only)
+    - Metered overage as subscription items (overage stays one-time)
+    - Layout / visual redesign
+intent:
+  what: aylik-paket and surec-yonetimi charge monthly via Stripe Subscription; renewals create periods (aylik) without manual rebuy
+  why: operator locked continuous commerce + auto charge
+  triggered_by: user_request
+steps:
+  - { order: 1, action: "Prisma Customer stripe fields + StripeInvoiceReceipt + period invoice id", files: ["prisma/schema.prisma", "prisma/migrations/20260914150000_stripe_subscription/migration.sql"], risk: medium }
+  - { order: 2, action: "isSubscriptionPackage + checkout mode subscription", files: ["src/lib/cases/document-slots.ts", "src/app/api/cases/[id]/checkout/route.ts"], risk: high }
+  - { order: 3, action: "Webhook invoice.paid renew + subscription.updated/deleted; link Customer", files: ["src/app/api/webhooks/stripe/route.ts", "src/lib/customer-portal/subscription-period.ts", "src/lib/customer-portal/stripe-subscription.ts", "src/lib/services/case-paid-effects.ts", "src/lib/customer-portal/purchase-guard.ts", "src/lib/customer-portal/period-renewal.ts"], risk: high }
+  - { order: 4, action: "Kanon + public copy auto-charge truth", files: ["docs/01-is-modeli.md", "src/content/tr.ts", "src/content/pl.ts", "src/content/en.ts", "src/content/faq.ts"], risk: low }
+  - { order: 5, action: "Unit tests + guard", files: ["src/lib/customer-portal/stripe-subscription.test.ts"], risk: low }
+dependencies: []
+side_effects:
+  - Stripe webhook must include invoice.paid and customer.subscription.*
+  - Existing open payment-mode sessions for monthly SKUs become invalid; new checkout creates subscription sessions
+rollback:
+  trigger: pre-commit-guard or npm test fail
+  steps: ["revert migration if not applied in prod", "git restore touched files"]
+success_criteria:
+  - "aylik-paket + surec-yonetimi Checkout mode=subscription"
+  - "invoice.paid subscription_cycle creates aylik period idempotently"
+  - "subscription_create does not double-create period"
+  - "Public copy states auto monthly charge"
+  - "guard + tests green"
+stop_conditions:
+  - "Cannot run without inventing Stripe Price catalog env"
+estimated_effort: 90
+risk_overall: high
+disk_impact: none
+disk_borrow: n/a
+disk_return: n/a
+disk_verify: "node scripts/pre-commit-guard.js"
+unlock_justification: "operator verbal PROCEED — evet açılsın (Stripe Subscription)"

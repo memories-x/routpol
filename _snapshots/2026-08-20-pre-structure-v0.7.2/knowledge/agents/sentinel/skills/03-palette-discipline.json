@@ -1,0 +1,26 @@
+{
+  "id": "design-token-discipline",
+  "title": "Design Token Discipline",
+  "description": "Prefer design tokens / CSS variables over raw hex. Customize forbidden patterns in project.invariants.yaml → design.forbidden_hex_patterns.",
+  "reference": "project.invariants.yaml → design",
+  "scope": "any",
+  "ext": [".tsx", ".jsx", ".css", ".vue", ".svelte"],
+  "rules": [
+    {
+      "id": "RAW_HEX_BACKGROUND",
+      "pattern": "bg-\\[#[0-9a-fA-F]{3,8}\\]",
+      "severity": "warn",
+      "message": "Inline hex Tailwind/class — bypasses theme system.",
+      "remediation": "Use named design tokens from your theme config. Set design.enabled and token_prefix in project.invariants.yaml.",
+      "reference": "PROJECT_CHARTER.md → design"
+    },
+    {
+      "id": "RAW_HEX_COLOR",
+      "pattern": "(color|background(-color)?|border-color)\\s*:\\s*#[0-9a-fA-F]{3,8}\\b",
+      "severity": "info",
+      "message": "Raw hex in CSS — prefer CSS variables or token map.",
+      "remediation": "Define tokens in global theme; reference var(--token-name).",
+      "reference": "project.invariants.yaml"
+    }
+  ]
+}

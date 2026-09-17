@@ -1,0 +1,19 @@
+plan_id: 2026-09-12-ticaret-ana-is-kolu
+surface: Landing Hero + /danismanlik + kanon
+intent: >-
+  Ticaret masası ana iş kolu; idari paketler operasyonel Stripe hattı.
+  Komisyon oranı kamu metinde yok.
+references:
+  - same as last (Quiet Authority)
+restore_phrase: "pre-ticaret-primary"
+restore_snapshot: _snapshots/2026-09-12-pre-ticaret-primary/
+out_of_scope:
+  - Scope/Packages visual redesign
+  - New Stripe SKU for trade
+  - Commission % in public copy
+success_criteria:
+  - Hero primary CTA /danismanlik
+  - Lead option ticaret-masasi
+  - docs/01 two-pillar model
+  - Browser QA /tr + /tr/danismanlik
+  - pre-commit-guard green

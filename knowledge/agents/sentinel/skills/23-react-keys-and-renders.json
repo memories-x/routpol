@@ -1,0 +1,42 @@
+{
+  "id": "react-keys-renders",
+  "title": "React Keys & Render Stability",
+  "description": "Eksik veya kararsız key prop'ları, gereksiz re-render'a yol açan inline object/array kullanımları.",
+  "reference": "docs/wiki/<feature>.md",
+  "scope": "any",
+  "ext": [".tsx", ".jsx"],
+  "rules": [
+    {
+      "id": "KEY_USING_INDEX",
+      "pattern": "\\bkey\\s*=\\s*\\{\\s*(?:index|i|idx)\\s*\\}",
+      "severity": "warn",
+      "message": "key={index} kullanımı reorder/insert işlemlerinde child state karışmasına yol açar.",
+      "remediation": "Stable ID kullan: key={item.id}. ID yoksa içerikten hash üret veya nanoid ile oluştur.",
+      "reference": "React docs: Lists and Keys"
+    },
+    {
+      "id": "INLINE_STYLE_OBJECT_LARGE",
+      "pattern": "\\bstyle\\s*=\\s*\\{\\{[^}]{40,}\\}\\}",
+      "severity": "warn",
+      "message": "Uzun inline style object her render'da yeni referans - child memoization'ı kırar, performance kaybı.",
+      "remediation": "useMemo ile sar, component dışında const olarak tanımla veya Tailwind className kullan.",
+      "reference": "React performance"
+    },
+    {
+      "id": "INLINE_ARRAY_PROP_LARGE",
+      "pattern": "\\b(?:data|items|options|list|values|entries)\\s*=\\s*\\{\\s*\\[[^\\]]{30,}\\]\\s*\\}",
+      "severity": "warn",
+      "message": "Inline array prop her render'da yeni referans - memo'lu child yine re-render eder.",
+      "remediation": "useMemo ile sar veya component dışına çıkar.",
+      "reference": "React performance"
+    },
+    {
+      "id": "INLINE_OBJECT_PROP_DESTRUCTURABLE",
+      "pattern": "\\b(?:config|options|settings|params|meta)\\s*=\\s*\\{\\{[^}]{30,}\\}\\}",
+      "severity": "warn",
+      "message": "Inline object prop her render'da yeni referans - memo'yu kırar.",
+      "remediation": "useMemo ile sar veya state'e taşı.",
+      "reference": "React performance"
+    }
+  ]
+}

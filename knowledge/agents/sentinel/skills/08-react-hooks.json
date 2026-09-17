@@ -1,0 +1,44 @@
+{
+  "id": "react-hooks",
+  "title": "React Hooks Discipline",
+  "description": "Hook anti-patterns that cause stale closures, infinite renders, and memory leaks.",
+  "reference": "https://react.dev/reference/react",
+  "scope": "panel",
+  "ext": [".tsx", ".ts", ".jsx"],
+  "rules": [
+    {
+      "id": "USEEFFECT_NO_DEPS",
+      "pattern": "useEffect\\s*\\(\\s*\\([^)]*\\)\\s*=>\\s*\\{[\\s\\S]*?\\}\\s*\\)\\s*;",
+      "flags": "g",
+      "severity": "warn",
+      "message": "useEffect without dependency array runs on every render — usually a bug.",
+      "remediation": "Add explicit deps array. Empty [] for mount-only; otherwise list every external value used inside.",
+      "reference": "react.dev/learn/synchronizing-with-effects"
+    },
+    {
+      "id": "STATE_IN_RENDER",
+      "pattern": "(?<!//.*)setState\\s*\\(",
+      "severity": "info",
+      "message": "If setState() is called during render (outside useEffect/event handler), it causes infinite loops.",
+      "remediation": "Wrap in useEffect or move to event handler. Render must be pure.",
+      "reference": "react.dev/learn/keeping-components-pure"
+    },
+    {
+      "id": "USESTATE_OBJECT_INLINE",
+      "pattern": "useState\\s*\\(\\s*\\{",
+      "severity": "info",
+      "message": "useState with inline object literal recreates the initial value every render (cheap but wasteful).",
+      "remediation": "Wrap in lazy initializer: `useState(() => ({...}))` for non-trivial defaults.",
+      "reference": "react.dev/reference/react/useState"
+    },
+    {
+      "id": "MISSING_CLEANUP",
+      "pattern": "useEffect\\s*\\([\\s\\S]*?(setInterval|addEventListener|new ResizeObserver|new MutationObserver|new IntersectionObserver)[\\s\\S]*?\\)\\s*;",
+      "flags": "g",
+      "severity": "warn",
+      "message": "Effect creates a subscription/timer but may lack cleanup — memory leak risk on unmount/re-run.",
+      "remediation": "Return a cleanup function from the effect: `return () => clearInterval(...)`.",
+      "reference": "react.dev/learn/synchronizing-with-effects#how-to-handle-the-effect-firing-twice-in-development"
+    }
+  ]
+}

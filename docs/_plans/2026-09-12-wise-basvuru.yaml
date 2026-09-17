@@ -1,0 +1,17 @@
+plan_id: 2026-09-12-wise-basvuru
+surface: basvuru (OrderForm + stepper + summary + login banner)
+references:
+  - https://wise.com/ (agreed prior: soft green, airy hierarchy, radio rows, compact progress)
+  - prior Wise shell on landing (POL-TURK emerald tokens)
+restore_phrase: "wise basvuru öncesi"
+restore_snapshot: _snapshots/2026-09-12-pre-wise-basvuru/
+out_of_scope:
+  - landing hero / header / footer / packages section
+  - portal / panel
+  - checkout API / Stripe
+success_criteria:
+  - Stepper: compact horizontal rail, full labels readable (no truncate, no letter-stack)
+  - Package/entity picks: Wise-like radio rows, not heavy card wall
+  - Summary: amount-first hierarchy
+  - Browser QA: /tr/basvuru desktop + ~390px
+  - pre-commit-guard green

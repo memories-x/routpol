@@ -1,0 +1,32 @@
+{
+  "falsePositives": [
+    {
+      "file": "ac-panel/src/index.css",
+      "snippet": "border: 1px solid #1f2a4a;",
+      "addedAt": "2026-05-12T19:49:00Z"
+    },
+    {
+      "file": "ac-panel/src/pages/Settings.tsx",
+      "snippet": "{['#b026ff', '#3da4ff', '#10b981', '#f59e0b'].map((color) => (",
+      "addedAt": "2026-05-12T17:52:18.000Z"
+    },
+    {
+      "file": "ac-panel/src/pages/Settings.tsx",
+      "snippet": "color === '#b026ff' ? 'ring-4 ring-acNeon/40' : 'opacity-60 hover:opacity-100'",
+      "addedAt": "2026-05-12T17:52:18.000Z"
+    }
+  ],
+  "learnedRules": [
+    {
+      "id": "LEGACY_HEX_V1",
+      "pattern": "#0f0f15|#030712",
+      "message": "EXPERIENCE: This is a legacy hex color from the old neon theme. Use bg-acDark or ac- variables.",
+      "severity": "error"
+    }
+  ],
+  "stats": {
+    "totalAudits": 183,
+    "totalViolations": 50268,
+    "lastScore": 100
+  }
+}

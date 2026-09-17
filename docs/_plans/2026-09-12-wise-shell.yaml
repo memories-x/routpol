@@ -1,0 +1,13 @@
+id: 2026-09-12-wise-shell
+surface: landing-shell + hub packages (operator: genel herşeyi)
+goal: Wise-inspired visible shell — soft panels, flow steps, clear CTA; Quiet Authority DNA
+refs:
+  - https://wise.com/
+  - https://stripe.com/
+restore: quiet authority baseline'a dön | pre-wise-shell
+out_of_scope:
+  - grey mist / navy dossier / fake stats / WhatsApp primary chrome
+browser_qa:
+  - /tr desktop + mobile
+  - /tr#paketler /tr#surec
+ship: node scripts/pre-commit-guard.js

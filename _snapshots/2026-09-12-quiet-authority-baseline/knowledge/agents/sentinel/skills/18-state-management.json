@@ -1,0 +1,52 @@
+{
+  "id": "state-management",
+  "title": "React State Management Discipline",
+  "description": "Derived-state anti-patterns, prop drilling, context misuse, stale closures.",
+  "reference": "react.dev/learn/sharing-state-between-components",
+  "scope": "panel",
+  "ext": [".tsx", ".jsx"],
+  "rules": [
+    {
+      "id": "DERIVED_STATE_DUPLICATE",
+      "pattern": "useState\\s*<[^>]*>\\s*\\([\\s\\S]{0,80}?props\\.\\w+\\s*\\)",
+      "flags": "g",
+      "severity": "warn",
+      "message": "useState initial value props'tan — derived state anti-pattern. Props değişince state senkronize olmaz.",
+      "remediation": "Doğrudan props.x kullan veya useMemo ile derive et. State'i sadece kendi yaşam döngüsü olan değer için tut.",
+      "reference": "react.dev — derived state"
+    },
+    {
+      "id": "SET_STATE_IN_RENDER",
+      "pattern": "(?<!//.*)set[A-Z]\\w*\\s*\\([^)]*\\)\\s*;\\s*(?=\\}\\s*\\)\\s*;?\\s*\\}?\\s*\\}?\\s*return\\s)",
+      "severity": "info",
+      "message": "Render gövdesinde setState çağrısı — sonsuz loop riski.",
+      "remediation": "useEffect içine taşı veya event handler'a.",
+      "reference": "react.dev — keeping components pure"
+    },
+    {
+      "id": "CONTEXT_VALUE_OBJECT_INLINE",
+      "pattern": "<\\w+Context\\.Provider\\s+value=\\{\\{",
+      "severity": "info",
+      "message": "Context Provider value inline object — her render'da tüm consumer'lar re-render.",
+      "remediation": "useMemo ile sarmala. Veya context'i daha küçük parçalara böl.",
+      "reference": "react.dev — useContext memo"
+    },
+    {
+      "id": "USESTATE_SHOULD_BE_REF",
+      "pattern": "useState\\s*<\\s*(?:HTMLElement|HTMLDivElement|HTMLInputElement|HTMLButtonElement|number|Timer)\\s*\\|\\s*null\\s*>\\s*\\(\\s*null\\s*\\)",
+      "flags": "g",
+      "severity": "info",
+      "message": "DOM ref veya timer için useState — re-render tetiklemiyorsa useRef tercih edilmeli.",
+      "remediation": "const ref = useRef<T | null>(null); — re-render olmadan değer saklar.",
+      "reference": "react.dev/reference/react/useRef"
+    },
+    {
+      "id": "MULTIPLE_STATE_RELATED",
+      "pattern": "useState[\\s\\S]{0,40}?useState[\\s\\S]{0,40}?useState[\\s\\S]{0,40}?useState",
+      "severity": "info",
+      "message": "Aynı komponente 4+ useState — ilişkili değerlerse useReducer veya tek state object tercih edilmeli.",
+      "remediation": "useReducer ile birleştir veya tek `useState<{a,b,c,d}>` ile yönet — atomic update.",
+      "reference": "react.dev/reference/react/useReducer"
+    }
+  ]
+}

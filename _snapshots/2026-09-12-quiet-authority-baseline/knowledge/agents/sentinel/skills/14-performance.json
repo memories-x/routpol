@@ -1,0 +1,61 @@
+{
+  "id": "performance",
+  "title": "Frontend & Backend Performance",
+  "description": "Subtle perf killers — re-render storms, blocking I/O, N+1 patterns, oversized imports.",
+  "reference": "AGENTS.md",
+  "scope": "any",
+  "ext": [".ts", ".tsx", ".js"],
+  "rules": [
+    {
+      "id": "INLINE_OBJECT_PROP",
+      "pattern": "<[A-Z][A-Za-z]+\\s+[^>]*=\\{\\{[^}]+\\}\\}",
+      "severity": "info",
+      "message": "Inline object/array literal as prop forces child re-render every parent render.",
+      "remediation": "Hoist to useMemo or module scope if the value is stable.",
+      "reference": "react.dev/reference/react/memo",
+      "scope": "panel"
+    },
+    {
+      "id": "WILDCARD_IMPORT",
+      "pattern": "import\\s+\\*\\s+as\\s+\\w+\\s+from",
+      "severity": "warn",
+      "message": "Wildcard import pulls the entire module into the bundle, defeats tree-shaking.",
+      "remediation": "Named imports: `import { foo, bar } from 'pkg'`.",
+      "reference": "Vite docs — tree-shaking"
+    },
+    {
+      "id": "READ_FILE_SYNC_HOT_PATH",
+      "pattern": "fs\\.readFileSync\\s*\\(",
+      "severity": "info",
+      "message": "Synchronous file I/O blocks the daemon event loop — fine on boot, bad in request handlers.",
+      "remediation": "If inside a route handler, use fs.promises.readFile instead.",
+      "reference": "Node.js perf guidelines",
+      "scope": "daemon"
+    },
+    {
+      "id": "JSON_PARSE_HOT_PATH",
+      "pattern": "JSON\\.parse\\s*\\(\\s*fs\\.readFileSync",
+      "severity": "warn",
+      "message": "JSON.parse(fs.readFileSync(...)) double-blocks. Repeated reads = N+1.",
+      "remediation": "Cache parsed result in memory; invalidate on file mtime.",
+      "reference": "Node.js perf guidelines",
+      "scope": "daemon"
+    },
+    {
+      "id": "NESTED_AWAIT_IN_LOOP",
+      "pattern": "for\\s*\\([^)]+\\)\\s*\\{[^}]*await\\s",
+      "severity": "info",
+      "message": "`await` inside a for-loop is sequential. If items are independent, this is N×latency.",
+      "remediation": "If independent: `await Promise.all(items.map(...))`. Order-dependent? leave it.",
+      "reference": "MDN — Promise.all"
+    },
+    {
+      "id": "ARRAY_INDEXOF_FILTER_RENDER",
+      "pattern": "\\.filter\\([^)]*\\.indexOf\\([^)]+\\)\\s*[!=]==?\\s*-?\\d+\\s*\\)",
+      "severity": "info",
+      "message": "filter + indexOf is O(n²). On large lists this stutters the UI.",
+      "remediation": "Use a Set: `const set = new Set(other); items.filter(i => set.has(i))`.",
+      "reference": "MDN — Set"
+    }
+  ]
+}

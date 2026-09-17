@@ -1,0 +1,156 @@
+{
+  "stats": {
+    "totalAudits": 5,
+    "totalDecisions": {
+      "PROCEED": 2,
+      "REVISE": 2,
+      "ABORT": 1,
+      "DEFER": 0
+    },
+    "totalClosed": 3,
+    "totalReopened": 3
+  },
+  "patternFrequency": {
+    "scope_drift_while_at_it": 1,
+    "stale_finding_premise": 1,
+    "risk_underestimation": 1,
+    "half_migration": 1,
+    "wiki_claim_drift": 1,
+    "scope_creep_at_close": 1,
+    "r5_reflex_relapse": 1,
+    "silent_changelog_overwrite": 1,
+    "missing_canonical_fields": 2,
+    "git_rollback_infeasible": 1
+  },
+  "learnedReflexAborts": [
+    {
+      "id": "STALE_FINDING_PREMISE",
+      "trigger": "Plan references CHANGELOG finding without live verification",
+      "addedAt": "2026-05-13",
+      "source": "Plan #1 (BackupCenter prompt() — already cleaned)"
+    },
+    {
+      "id": "GIT_ROLLBACK_NO_GIT_ENV",
+      "trigger": "Plan rollback uses 'git checkout' but environment has no git",
+      "addedAt": "2026-05-13",
+      "source": "Plan C (errMessage rollout)"
+    }
+  ],
+  "directionLocks": [
+    {
+      "file": "ac-panel/src/services/api.ts",
+      "direction_hash": "b2f4a1c9",
+      "direction_summary": "migrate to catch(e:unknown) + errMessage + response interceptor guard",
+      "locked_by_plan": "2287d611",
+      "locked_at": "2026-05-13",
+      "locked_until": "2026-06-12",
+      "lock_status": "active"
+    },
+    {
+      "file": "ac-panel/src/pages/Marketplace.tsx",
+      "direction_hash": "a3f12b8c",
+      "direction_summary": "migrate to catch(e:unknown) + errMessage + axios envelope guard",
+      "locked_by_plan": "2287d611",
+      "locked_at": "2026-05-13",
+      "locked_until": "2026-06-12",
+      "lock_status": "active"
+    },
+    {
+      "file": "ac-panel/src/pages/ServerDetails.tsx",
+      "direction_hash": "c5d1e2f3",
+      "direction_summary": "migrate to catch(e:unknown) + errMessage + axios envelope guard",
+      "locked_by_plan": "2287d611",
+      "locked_at": "2026-05-13",
+      "locked_until": "2026-06-12",
+      "lock_status": "active"
+    },
+    {
+      "file": "ac-panel/src/pages/Nodes.tsx",
+      "direction_hash": "d6e2f3a4",
+      "direction_summary": "migrate to catch(e:unknown) + errMessage + axios envelope guard",
+      "locked_by_plan": "2287d611",
+      "locked_at": "2026-05-13",
+      "locked_until": "2026-06-12",
+      "lock_status": "active"
+    },
+    {
+      "file": "ac-panel/src/pages/Security.tsx",
+      "direction_hash": "e7f3a4b5",
+      "direction_summary": "migrate to catch(e:unknown) + errMessage + axios envelope guard",
+      "locked_by_plan": "2287d611",
+      "locked_at": "2026-05-13",
+      "locked_until": "2026-06-12",
+      "lock_status": "active"
+    },
+    {
+      "file": "ac-panel/src/pages/AuditLogs.tsx",
+      "direction_hash": "f8a4b5c6",
+      "direction_summary": "migrate to catch(e:unknown) + errMessage + axios envelope guard",
+      "locked_by_plan": "2287d611",
+      "locked_at": "2026-05-13",
+      "locked_until": "2026-06-12",
+      "lock_status": "active"
+    },
+    {
+      "file": "ac-panel/src/pages/TerminalPage.tsx",
+      "direction_hash": "a9b5c6d7",
+      "direction_summary": "migrate to catch(e:unknown) + errMessage + axios envelope guard",
+      "locked_by_plan": "2287d611",
+      "locked_at": "2026-05-13",
+      "locked_until": "2026-06-12",
+      "lock_status": "active"
+    },
+    {
+      "file": "ac-panel/src/pages/Settings.tsx",
+      "direction_hash": "b0c6d7e8",
+      "direction_summary": "standardize defensive logic (0 catch baseline)",
+      "locked_by_plan": "2287d611",
+      "locked_at": "2026-05-13",
+      "locked_until": "2026-06-12",
+      "lock_status": "active"
+    },
+    {
+      "file": "ac-panel/src/pages/NetworkCenter.tsx",
+      "direction_hash": "c1d7e8f9",
+      "direction_summary": "migrate to catch(e:unknown) + errMessage + axios envelope guard",
+      "locked_by_plan": "2287d611",
+      "locked_at": "2026-05-13",
+      "locked_until": "2026-06-12",
+      "lock_status": "active"
+    },
+    {
+      "file": "ac-panel/src/pages/ServerList.tsx",
+      "direction_hash": "d2e8f9a0",
+      "direction_summary": "migrate to catch(e:unknown) + errMessage + axios envelope guard",
+      "locked_by_plan": "2287d611",
+      "locked_at": "2026-05-13",
+      "locked_until": "2026-06-12",
+      "lock_status": "active"
+    }
+  ],
+  "closedPlans": [
+    {
+      "hash": "a9e1f4d2",
+      "title": "BackupCenter Quality Polish",
+      "turns": 3,
+      "finalScore": 99,
+      "closedAt": "2026-05-13"
+    },
+    {
+      "hash": "7b2c8f44+e",
+      "title": "Cross-File Unused Import Sweep",
+      "turns": 1,
+      "finalScore": "TS6133 33->0",
+      "closedAt": "2026-05-13",
+      "advisories": ["R5 emoji violation in report"]
+    },
+    {
+      "hash": "2287d611",
+      "title": "Defensive Catch Migration (Plan C)",
+      "turns": 1,
+      "finalScore": 99,
+      "closedAt": "2026-05-13",
+      "advisories": ["R13 locks registered post-flight"]
+    }
+  ]
+}

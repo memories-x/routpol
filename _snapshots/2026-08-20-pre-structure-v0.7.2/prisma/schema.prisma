@@ -1,0 +1,262 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+/// Müşteri kartı — e-posta tekil; süreçler buna bağlanır
+model Customer {
+  id                   String   @id @default(cuid())
+  email                String   @unique
+  fullName             String
+  phone                String
+  companyName          String?
+  nip                  String?
+  /// sahis | sirket — profil / form prefill
+  entityType           String?
+  preferredResultLocale String?
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+  cases                Case[]
+  portalLogins         CustomerPortalLogin[]
+  subscriptionPeriods  SubscriptionPeriod[]
+}
+
+/// Magic link — yalnızca hash saklanır; tek kullanımlık
+model CustomerPortalLogin {
+  id         String    @id @default(cuid())
+  customerId String
+  customer   Customer  @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  tokenHash  String    @unique
+  expiresAt  DateTime
+  usedAt     DateTime?
+  requestIp  String?
+  createdAt  DateTime  @default(now())
+
+  @@index([customerId, createdAt])
+}
+
+/// Aylık idari takip dönemi — kota + aşım
+model SubscriptionPeriod {
+  id             String   @id @default(cuid())
+  customerId     String
+  customer       Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  packageSlug    String   @default("aylik-paket")
+  quota          Int
+  usedCount      Int      @default(0)
+  overageCredits Int      @default(0)
+  periodStart    DateTime
+  periodEnd      DateTime
+  /// active | queued | ended
+  status         String   @default("active")
+  anchorCaseId   String?  @unique
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  cases          Case[]
+  submissions    LetterSubmission[]
+
+  /// Açık Stripe checkout — aşım için tek session
+  pendingOverageSessionId String?
+
+  /// Dönem bitiminden ~5 gün önce yenileme hatırlatması
+  renewalReminderSentAt DateTime?
+
+  @@index([customerId, status])
+}
+
+/// Dağıtık rate limit (process-local fallback yanında)
+model RateLimitBucket {
+  key       String   @id
+  count     Int      @default(0)
+  resetAt   DateTime
+  updatedAt DateTime @updatedAt
+}
+
+/// Stripe webhook event.id — at-least-once teslimat için tek sefer işaretleme
+model StripeEventReceipt {
+  eventId   String   @id
+  eventType String
+  createdAt DateTime @default(now())
+}
+
+/// Panel / sistem denetim kaydı
+model AuditLog {
+  id        String   @id @default(cuid())
+  actor     String   @default("panel")
+  action    String
+  caseId    String?
+  docId     String?
+  ip        String?
+  meta      Json?
+  createdAt DateTime @default(now())
+
+  @@index([createdAt])
+  @@index([caseId])
+}
+
+/// Mail / yan etki kuyruğu — sessiz hata önleme
+model OutboxMessage {
+  id        String    @id @default(cuid())
+  type      String
+  payload   Json
+  attempts  Int       @default(0)
+  sentAt    DateTime?
+  lastError String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@index([sentAt, createdAt])
+}
+
+/// Case checkout.session.id — çift ödeme yan etkisi önleme
+model CaseCheckoutReceipt {
+  sessionId String   @id
+  caseId    String
+  createdAt DateTime @default(now())
+}
+
+/// Çerezsiz sunucu tarafı dönüşüm / funnel olayları
+model AnalyticsEvent {
+  id        String   @id @default(cuid())
+  name      String
+  locale    String?
+  meta      Json?
+  createdAt DateTime @default(now())
+
+  @@index([name, createdAt])
+}
+
+/// Stripe checkout.session.id — aşım webhook tekrarı yok
+model StripeCheckoutReceipt {
+  sessionId String   @id
+  kind      String
+  periodId  String?
+  createdAt DateTime @default(now())
+}
+
+/// Portal üzerinden yüklenen yazı (dönem içi)
+model LetterSubmission {
+  id           String             @id @default(cuid())
+  periodId     String
+  period       SubscriptionPeriod @relation(fields: [periodId], references: [id], onDelete: Cascade)
+  caseId       String?
+  originalName String
+  mime         String
+  size         Int
+  storagePath  String
+  pageCount    Int?
+  createdAt    DateTime           @default(now())
+
+  @@index([periodId, createdAt])
+}
+
+/// Tek başvuru / dosya
+model Case {
+  id            String   @id
+  customerId           String
+  customer             Customer            @relation(fields: [customerId], references: [id])
+  subscriptionPeriodId String?
+  subscriptionPeriod   SubscriptionPeriod? @relation(fields: [subscriptionPeriodId], references: [id], onDelete: SetNull)
+  locale               String
+  packageSlug   String
+  status        String
+  accessToken   String   @unique
+  matter        String?
+  resultLocale  String?
+  customerNotes String?
+  /// Yerel / Drive klasör etiketi
+  archiveFolder String?
+  /// Köprü: avukat ortağı etiketi (süreç kontrolü ortakta)
+  lawyerPartner String?
+  lawyerPartnerId String?
+  partner         LawyerPartner? @relation(fields: [lawyerPartnerId], references: [id], onDelete: SetNull)
+  /// Paket checklist [{ key, label, doneAt }]
+  checklist     Json?
+  pricingMeta   Json?
+  /// @deprecated — paymentStatus/stripeSessionId kolonları kanonik; JSON geri uyum
+  payment       Json?
+  paymentStatus        String    @default("none")
+  paymentAmountCents   Int       @default(0)
+  paymentCurrency      String    @default("pln")
+  paymentPaidAt        DateTime?
+  stripeSessionId      String?   @unique
+  stripeCustomerId     String?
+  stripeSubscriptionId String?
+  paymentInvoice       Json?
+  notifications Json?
+  createdAt     DateTime
+  updatedAt     DateTime
+  documents     CaseDocument[]
+  notes         CaseNote[]
+
+  @@index([status, updatedAt])
+  @@index([customerId])
+  @@index([subscriptionPeriodId])
+  @@index([lawyerPartnerId])
+  @@index([stripeSessionId])
+}
+
+/// Panel operatörü — argon2 hash; env PANEL_PASSWORD bootstrap
+model PanelUser {
+  id              String   @id @default(cuid())
+  username        String   @unique @default("operator")
+  passwordHash    String
+  passwordVersion Int      @default(1)
+  active          Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+/// Operatör dizini — avukatın site hesabı yok
+model LawyerPartner {
+  id         String   @id
+  name       String
+  officeName String?
+  email      String?
+  phone      String?
+  nip        String?
+  barNumber  String?
+  city       String?
+  address    String?
+  notes      String?
+  website    String?
+  specialty  String?
+  languages  Json?
+  contractStatus String @default("none")
+  active     Boolean  @default(true)
+  createdAt  DateTime
+  updatedAt  DateTime
+  cases      Case[]
+}
+
+/// Evrak meta — bytes Blob/FS’te (storagePath)
+model CaseDocument {
+  id           String   @id
+  caseId       String
+  case         Case     @relation(fields: [caseId], references: [id], onDelete: Cascade)
+  slotKey      String
+  originalName String
+  mime         String
+  size         Int
+  storagePath  String
+  pageCount    Int?
+  uploadedAt   DateTime
+
+  @@index([caseId, slotKey])
+}
+
+/// Operatör süreç notu — istenirse müşteriyle paylaşılır
+model CaseNote {
+  id                 String   @id @default(cuid())
+  caseId             String
+  case               Case     @relation(fields: [caseId], references: [id], onDelete: Cascade)
+  body               String
+  author             String   @default("operator")
+  sharedWithCustomer Boolean  @default(false)
+  createdAt          DateTime @default(now())
+
+  @@index([caseId, createdAt])
+}

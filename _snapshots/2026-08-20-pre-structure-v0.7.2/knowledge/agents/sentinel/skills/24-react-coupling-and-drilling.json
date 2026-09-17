@@ -1,0 +1,50 @@
+{
+  "id": "react-coupling-drilling",
+  "title": "React Coupling & Prop Drilling",
+  "description": "Derin prop zincirleri ve aşırı prop sayısı - Context API veya kompozisyon adayı.",
+  "reference": "docs/wiki/<feature>.md",
+  "scope": "any",
+  "ext": [".tsx", ".jsx"],
+  "rules": [
+    {
+      "id": "MANY_PROPS_DESTRUCTURED_FUNCTION",
+      "pattern": "function\\s+[A-Z]\\w*\\s*\\(\\s*\\{\\s*\\w+(?:\\s*,\\s*\\w+){7,}\\s*\\}",
+      "severity": "warn",
+      "message": "Component 8+ prop destructure ediyor - sorumluluk yoğunlaşmış; Context API veya kompozisyon düşün.",
+      "remediation": "Prop'ları grupla ({ config, handlers, state }) veya useContext ile global state'e taşı.",
+      "reference": "React composition patterns"
+    },
+    {
+      "id": "MANY_PROPS_DESTRUCTURED_ARROW",
+      "pattern": "const\\s+[A-Z]\\w*\\s*[:=][^=]{0,80}\\(\\s*\\{\\s*\\w+(?:\\s*,\\s*\\w+){7,}\\s*\\}",
+      "severity": "warn",
+      "message": "Arrow component 8+ prop destructure ediyor - Context API veya kompozisyon düşün.",
+      "remediation": "Prop'ları grupla veya context'e taşı.",
+      "reference": "React composition patterns"
+    },
+    {
+      "id": "FULL_PROPS_SPREAD",
+      "pattern": "<[A-Z]\\w+\\s+\\{\\.\\.\\.\\s*props\\s*\\}\\s*/?>(?!\\s*\\{)",
+      "severity": "warn",
+      "message": "Tam {...props} spread - bağlanma görünmez, hangi prop nereye gidiyor takip edilemez, tip kontrolü zayıflar.",
+      "remediation": "İhtiyaç duyulan prop'ları explicit listele: <Foo onClick={onClick} value={value} />",
+      "reference": "React patterns"
+    },
+    {
+      "id": "PROP_DRILLING_AUTH_USER",
+      "pattern": "<[A-Z]\\w+\\s+[^>]*\\b(?:user|currentUser|authUser|auth)\\s*=\\s*\\{\\s*(?:user|currentUser|authUser|auth)\\s*\\}",
+      "severity": "warn",
+      "message": "Auth/user prop'u manuel drill ediliyor - tipik Context API adayı.",
+      "remediation": "AuthContext / UserContext oluştur, child'lar useContext(AuthContext) ile çeksin.",
+      "reference": "React Context API"
+    },
+    {
+      "id": "PROP_DRILLING_THEME_LOCALE",
+      "pattern": "<[A-Z]\\w+\\s+[^>]*\\b(?:theme|locale|t|i18n|lang|language)\\s*=\\s*\\{\\s*(?:theme|locale|t|i18n|lang|language)\\s*\\}",
+      "severity": "warn",
+      "message": "Theme/locale prop'u manuel drill ediliyor - Context API adayı.",
+      "remediation": "ThemeContext / LanguageContext oluştur.",
+      "reference": "React Context API"
+    }
+  ]
+}

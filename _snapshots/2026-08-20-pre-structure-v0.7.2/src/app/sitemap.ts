@@ -1,0 +1,47 @@
+import { getContent } from "@/content";
+import type { MetadataRoute } from "next";
+
+export default function sitemap(): MetadataRoute.Sitemap {
+  const base = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+  const locales = ["tr", "pl", "en"] as const;
+  const slugs = getContent("tr").services.items.map((s) => s.slug);
+
+  const entries: MetadataRoute.Sitemap = [];
+
+  for (const locale of locales) {
+    entries.push({
+      url: `${base}/${locale}`,
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 1,
+    });
+    entries.push({
+      url: `${base}/${locale}/basvuru`,
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.9,
+    });
+    entries.push({
+      url: `${base}/${locale}/gizlilik`,
+      lastModified: new Date(),
+      changeFrequency: "yearly",
+      priority: 0.3,
+    });
+    entries.push({
+      url: `${base}/${locale}/rehber/mos`,
+      lastModified: new Date(),
+      changeFrequency: "yearly",
+      priority: 0.3,
+    });
+    for (const slug of slugs) {
+      entries.push({
+        url: `${base}/${locale}/hizmetler/${slug}`,
+        lastModified: new Date(),
+        changeFrequency: "monthly",
+        priority: 0.7,
+      });
+    }
+  }
+
+  return entries;
+}

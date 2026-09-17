@@ -1,0 +1,39 @@
+title: Hero quiet polish (operator autonomy)
+scope:
+  project: pol-turk
+  module: landing hero only
+  out_of_scope:
+    - globals token atmosphere / grey mist
+    - whole-site premium B2B rewrite
+    - packages process faq footer redesign
+    - inventing trust metrics
+intent:
+  what: Polish homepage hero composition within Quiet Authority baseline.
+  why: Operator granted autonomy; previous whole-site experiments rejected; system requires one surface + Browser QA.
+  triggered_by: user_request
+references: reuse quiet-authority baseline + Quiet Authority brand direction
+steps:
+  - order: 1
+    action: Hero spacing typography CTA hierarchy demo panel polish
+    files: [src/components/landing/LandingHero.tsx]
+    risk: low
+  - order: 2
+    action: Browser QA /tr desktop + mobile screenshot; fix if needed
+    files: [src/components/landing/LandingHero.tsx]
+    risk: low
+dependencies: []
+side_effects: []
+rollback:
+  trigger: operator dislikes
+  steps: [quiet authority baseline'a dön]
+success_criteria:
+  - BrandLockup remains hero-first
+  - Light surfaces preserved (#f8fafc / white)
+  - Browser screenshots reviewed
+  - pre-commit-guard passes
+stop_conditions:
+  - Scope creep to other sections
+estimated_effort: 35m
+risk_overall: low
+operator_proceed: verbal autonomy "sana bırakıyorum"
+restore: quiet authority baseline'a dön

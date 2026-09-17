@@ -1,0 +1,15 @@
+id: 2026-09-12-polish-motion
+surface: hero + packages + header + lead + nav transitions (operator: yap + menü animasyonu)
+goal: >
+  Hero live demo scene; featured package month timeline; sticky header polish;
+  lead form chrome match; menu/section active + soft page enter motion.
+refs: same as ref-combo (Clerk Mercury Attio Pitch Revolut)
+restore: pre-polish-motion | pre-ref-combo | quiet authority baseline'a dön
+out_of_scope:
+  - fake stats / testimonials
+  - grey mist / WhatsApp FAB
+browser_qa:
+  - /tr hero demo status + rows
+  - /tr#paketler featured timeline
+  - nav active highlight
+ship: node scripts/pre-commit-guard.js

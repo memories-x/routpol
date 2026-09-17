@@ -1,0 +1,72 @@
+"use client";
+
+import { DocumentTransform } from "@/components/sections/DocumentTransform";
+import { Button } from "@/components/ui/Button";
+import { Container, Eyebrow } from "@/components/ui/Section";
+import type { SiteContent } from "@/content/types";
+import { buildWhatsAppUrl } from "@/lib/whatsapp";
+import { motion, useReducedMotion } from "framer-motion";
+
+type HeroProps = {
+  content: SiteContent;
+  locale: string;
+};
+
+export function Hero({ content, locale }: HeroProps) {
+  const reduce = useReducedMotion();
+  const wa = buildWhatsAppUrl(content.system.whatsappPrefill);
+  const badges = Array.isArray(content.hero.badges) ? content.hero.badges : [];
+
+  return (
+    <section className="border-b border-pt-border bg-pt-bg">
+      <Container className="py-14 md:py-20">
+        <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
+          <motion.div
+            initial={reduce ? false : { opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: reduce ? 0 : 0.55, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <Eyebrow>{content.hero.eyebrow ?? content.brand.tagline}</Eyebrow>
+            <h1 className="mt-4 font-display text-3xl leading-tight text-pt-navy-900 md:text-5xl">
+              {content.hero.title}
+            </h1>
+            <p className="mt-5 max-w-xl text-base leading-relaxed text-pt-slate-600 md:text-lg">
+              {content.hero.subtitle}
+            </p>
+
+            <ul className="mt-8 flex flex-wrap gap-2">
+              {badges.map((badge) => (
+                <li
+                  key={badge}
+                  className="rounded-full border border-pt-border bg-pt-surface px-3 py-1 text-xs font-medium text-pt-navy-800 md:text-sm"
+                >
+                  {badge}
+                </li>
+              ))}
+            </ul>
+
+            <div className="mt-10 flex flex-wrap gap-3">
+              <Button href={`/${locale}/basvuru`} variant="primary">
+                {content.hero.ctaPrimary}
+              </Button>
+              {wa ? (
+                <a
+                  href={wa}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center rounded-md border border-pt-whatsapp/40 bg-pt-whatsapp/10 px-5 py-3 text-sm font-semibold text-pt-navy-900 hover:bg-pt-whatsapp/20"
+                >
+                  {content.hero.ctaSecondary}
+                </a>
+              ) : null}
+            </div>
+          </motion.div>
+
+          <div className="pt-reveal lg:justify-self-end">
+            <DocumentTransform demo={content.hero.documentDemo} />
+          </div>
+        </div>
+      </Container>
+    </section>
+  );
+}

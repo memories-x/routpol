@@ -1,0 +1,34 @@
+title: landing content module + bridge serviceLine
+scope:
+  project: pol-turk
+  module: content/landing + LandingHero + LandingBridge
+  out_of_scope:
+    - Packages Process FAQ Lead redesign
+    - demo scene copy changes
+    - LandingHeader hydration fix (separate)
+intent:
+  what: Canonical landing module split (types/tr/pl/en) and move trade supportTrack from hero into bridge.serviceLine.
+  why: Best structure — hero budget Quiet Authority; content maintainability; operator asked to act on deferred debts.
+  triggered_by: user_request
+steps:
+  - { order: 1, action: snapshot + plan, files: [_snapshots/2026-09-14-pre-landing-structure/, docs/_plans/2026-09-14-landing-structure.yaml], risk: low }
+  - { order: 2, action: Split landing.ts → landing/{types,tr,pl,en,index}.ts; delete monolith, files: [src/content/landing/], risk: medium }
+  - { order: 3, action: hero.supportTrack → bridge.serviceLine; slim LandingHero; render in LandingBridge, files: [types, tr/pl/en, LandingHero.tsx, LandingBridge.tsx], risk: medium }
+  - { order: 4, action: guard + Browser QA /tr hero+bridge, files: [], risk: low }
+dependencies: [landing-hero-demo.ts already extracted]
+side_effects: [hero first viewport loses dashed trade card; bridge gains quiet service line]
+rollback:
+  trigger: guard fail or operator rejects
+  steps: [pre-landing-structure restore phrase]
+success_criteria:
+  - import "@/content/landing" still resolves
+  - no hero.supportTrack dashed card
+  - bridge shows serviceLine with /danismanlik CTA
+  - pre-commit-guard green
+  - Browser QA /tr desktop hero+bridge
+stop_conditions: [atmosphere/token sweep]
+estimated_effort: 40
+risk_overall: medium
+disk_impact: none
+restore_phrase: pre-landing-structure
+references: same as last (Quiet Authority)

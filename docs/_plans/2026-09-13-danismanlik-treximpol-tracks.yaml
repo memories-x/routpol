@@ -1,0 +1,18 @@
+# Surface: /danismanlik only — Treximpol-inspired buy/sell tracks (rewrite, no copy)
+surface: danismanlik
+references:
+  - "https://treximpol.pl/tr/satin-alma-ve-satis-pazarlama-danismanligi/ (structure only)"
+  - "reuse: Quiet Authority + mevcut /danismanlik"
+restore_phrase: "pre-treximpol-tracks"
+snapshot: "_snapshots/2026-09-13-pre-treximpol-tracks/"
+out_of_scope:
+  - landing hero
+  - packages / hizmetler
+  - checkout / Stripe
+  - invented trust metrics / commission %
+  - Treximpol verbatim copy
+success_criteria:
+  - "/tr/danismanlik shows Satış-pazarlama + Satın alma tracks"
+  - "limits box still honest (not carrier, not deal party)"
+  - "Browser QA /tr/danismanlik desktop + narrow"
+  - "node scripts/pre-commit-guard.js green"

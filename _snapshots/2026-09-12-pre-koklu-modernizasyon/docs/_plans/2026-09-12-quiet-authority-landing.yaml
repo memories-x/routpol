@@ -1,0 +1,53 @@
+title: Quiet Authority landing IA and visual system
+scope:
+  project: pol-turk
+  module: public-landing
+  out_of_scope:
+    - panel chrome deep redesign
+    - portal MembershipGate split
+    - Stripe/go-live ops
+    - logo asset redesign beyond lockup usage
+intent:
+  what: Ana sayfayı 6 blokluk Quiet Authority düzenine indir; hero/tipografi/kapsam ritmini kurumsal marka eksenine hizala.
+  why: Kart duvarı ve tekrarlayan IA nedeniyle düzen/marka hissi yok; operatör tam yetki verdi.
+  triggered_by: user_request
+steps:
+  - order: 1
+    action: LandingPage’den audiences/categories/fieldSupport/cases kaldır; bridge + packages + process + scope + faq + lead
+    files: [src/components/landing/LandingPage.tsx]
+    risk: low
+  - order: 2
+    action: LandingBridge bileşeni + landing.ts TR/PL/EN içerik
+    files: [src/components/landing/LandingBridge.tsx, src/content/landing.ts]
+    risk: low
+  - order: 3
+    action: Hero açık zemin, brand hero-level, 2 CTA; demo kartı koru
+    files: [src/components/landing/LandingHero.tsx, src/components/landing/LandingLeadChrome.tsx]
+    risk: low
+  - order: 4
+    action: Process timeline açık yüzey; Scope koyu dürüstlük bandı
+    files: [src/components/landing/LandingProcess.tsx, src/components/landing/LandingScope.tsx]
+    risk: low
+  - order: 5
+    action: Display font Source Serif 4; font-display token
+    files: [src/app/layout.tsx, src/app/globals.css]
+    risk: low
+  - order: 6
+    action: Hub iki şerit başlıkları netleştir; kırık #paketler linkleri
+    files: [src/app/[locale]/hizmetler/page.tsx, src/app/[locale]/basvuru/page.tsx]
+    risk: low
+dependencies: []
+side_effects: [Ana sayfa daha kısa; kim-için/eşlik/örnek yalnızca hub/alt sayfalarda]
+rollback:
+  trigger: pre-commit-guard veya npm test fail
+  steps: [git checkout touched files]
+success_criteria:
+  - Ana sayfa ≤6 ana bölüm (+ faq/lead)
+  - Hero’da POL-TURK marka sinyali + 2 CTA
+  - npm test + audit-sentinel --diff + pre-commit-guard yeşil
+stop_conditions:
+  - Kanon iş modeli ihlali (avukat iddiası)
+estimated_effort: 90
+risk_overall: medium
+operator_proceed: true
+proceed_note: "user: tam yetki verdım yap ne gerekıyorsa"

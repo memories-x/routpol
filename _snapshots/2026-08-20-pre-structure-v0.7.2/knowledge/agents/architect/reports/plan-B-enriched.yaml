@@ -1,0 +1,129 @@
+# Plan B — Architect-enriched canonical version
+# Original submission: Antigravity, 2026-05-13
+# Enrichment: Architect filled missing canonical schema fields. Content unchanged.
+# plan_hash (original): 7b2c8f44
+# plan_hash (enriched): 7b2c8f44+e
+
+title: Cross-File Unused Import Sweep (TS6133 Cleanup)
+
+scope:
+  project: ac-panel
+  module: ac-panel/src/ (multi-file, 15 dosya)
+  out_of_scope:
+    - errMessage rollout (defer to Plan C)
+    - Business logic changes
+    - Component refactor / restructure
+    - False-unused removal (BASE_URL, dynamic requires)
+    - BackupCenter.tsx (Plan A scope, already CLOSED)
+
+intent:
+  what: |
+    33 adet TS6133 (unused import / declared but never read) uyarısını ac-panel'in
+    15 dosyasından temizle. Behavior change: 0. Tek hedef tsc temizliği.
+  why: |
+    npx tsc --noEmit'te biriken TS6133 gürültüsü Sentinel'in --tsc entegrasyonunu
+    boğuyor (audit script TS6133 hariç tutuyor bu yüzden). Temizlenince:
+    (a) bundle tree-shake daha verimli
+    (b) Sentinel --tsc gürültüsüz çalışır
+    (c) gelecek tsc hataları (TS2339 vb.) gizlenmez
+  triggered_by: tsc_output + sentinel_finding (GEMINI_TASKS.md Görev 1)
+
+steps:
+  - order: 1
+    action: pre_flight_baseline
+    files: []
+    risk: low
+    description: |
+      cd ac-panel && npx tsc --noEmit -p tsconfig.app.json > .tsc-baseline.log
+      TS6133 sayısını ve dağılımını kayda al. Sweep sonrası diff için temel.
+
+  - order: 2
+    action: per_file_atomic_sweep
+    files:
+      - ac-panel/src/components/AIChatAssistant.tsx
+      - ac-panel/src/components/FileManager.tsx
+      - ac-panel/src/components/ProvisioningWidget.tsx
+      - ac-panel/src/context/LanguageContext.tsx
+      - ac-panel/src/pages/AuditLogs.tsx
+      - ac-panel/src/pages/Dashboard.tsx
+      - ac-panel/src/pages/IntelligenceCenter.tsx
+      - ac-panel/src/pages/MasteryDashboard.tsx
+      - ac-panel/src/pages/NetworkCenter.tsx
+      - ac-panel/src/pages/Nodes.tsx
+      - ac-panel/src/pages/Security.tsx
+      - ac-panel/src/pages/ServerDetails.tsx
+      - ac-panel/src/pages/Settings.tsx
+      - ac-panel/src/pages/TerminalPage.tsx
+      - ac-panel/src/services/api.ts
+    risk: medium
+    description: |
+      For each target_file:
+        a. Read import block + identify TS6133-flagged symbols
+        b. For each candidate, run: Select-String -Path <file> -Pattern "\b<symbol>\b"
+           - Eşleşmeleri kontrol et: JSX <Name>, template ${name}, type {name},
+             generic <Name<...>>, decorator @Name
+           - Sadece import satırında görünüyorsa → gerçekten unused
+           - Başka satırda da görünüyorsa → false-unused, SKIP, neden olduğunu logla
+        c. Remove import, fix commas, save
+        d. Run: npx tsc --noEmit -p tsconfig.app.json
+        e. If tsc TS2304/TS2322/TS2339 patladıysa → revert this file, HALT sweep
+        f. If clean → commit/snapshot this file, continue to next
+
+  - order: 3
+    action: post_flight_validation
+    files: [tüm target_files]
+    risk: low
+    description: |
+      - cd ac-panel && npx tsc --noEmit -p tsconfig.app.json → 0 TS6133 hedefi
+      - cd ac-panel && npx vite build → exit 0 (smoke)
+      - node scripts/audit-sentinel.js --all → Quality Score ≥ 90 (regresyon yok)
+
+  - order: 4
+    action: documentation
+    files:
+      - CHANGELOG.md
+      - docs/wiki/Maintenance.md (yoksa oluştur, Plan B sweep'i belgele)
+    risk: low
+    description: |
+      CHANGELOG [3.2.5] entry:
+        - 33 TS6133 temizlendi (15 dosya)
+        - Hangi false-unused'lar SKIP edildi ve neden (rapor)
+        - 0 behavior change
+      docs/wiki/Maintenance.md:
+        - "Plan B Sweep" bölümü
+        - False-unused detection pattern referansı (sonraki sweep'ler için)
+
+dependencies:
+  - tsc 6.x output baseline (step 1'in çıktısı)
+  - git working tree clean (yarım değişiklik yok)
+  - Plan A CLOSED (BackupCenter ayrı, çakışmasın)
+
+side_effects:
+  - Import listesi değişen dosyalarda git diff gürültüsü (beklenen)
+  - Production bundle tree-shake verimliliği teorik artış
+  - Sentinel --tsc çıktısı temizlenir (TS6133 olmadığı için)
+  - Gelecek TS hataları gizlenmeyecek (TS2339 gibi)
+
+rollback:
+  trigger: tsc exit code ≠ 0 after any per-file save
+  steps:
+    - git checkout ac-panel/src/<failed_file>  (single file revert, idempotent)
+    - sweep'i HALT et, sonraki dosyaya GEÇME
+    - .tsc-baseline.log ile karşılaştırarak başka regresyon var mı doğrula
+
+stop_conditions:
+  - tsc exit code ≠ 0 after step 2.d (per-file)
+  - file modified by another agent during sweep (mtime check before/after)
+  - false-unused oranı %20'yi aşarsa (sweep eksik bilgiyle yapılıyor demek, HALT)
+  - vite build fail (step 3)
+
+success_criteria:
+  - npx tsc --noEmit -p tsconfig.app.json → BackupCenter.tsx hariç tüm dosyalarda 0 TS6133
+  - Toplam tsc çıktısında TS6133 sayısı 33 → 0 (veya SKIP edilenler dokumante)
+  - npx vite build → exit code 0
+  - Sentinel --all Quality Score ≥ 90 (önceki seviyenin altında düşmemeli)
+  - CHANGELOG [3.2.5] ve wiki Maintenance.md aynı turda güncellendi
+
+estimated_effort: 30m
+
+risk_overall: medium

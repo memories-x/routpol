@@ -1,0 +1,43 @@
+{
+  "id": "electron-ipc",
+  "title": "Electron IPC & Renderer Safety",
+  "description": "Electron-specific security: renderer must not access Node directly; main-process exposure must be allowlisted.",
+  "reference": "Electron Security Checklist",
+  "scope": "panel",
+  "ext": [".ts", ".tsx", ".js"],
+  "rules": [
+    {
+      "id": "NODE_INTEGRATION_TRUE",
+      "pattern": "nodeIntegration\\s*:\\s*true",
+      "severity": "error",
+      "message": "Enabling nodeIntegration in renderer is a full RCE primitive for any XSS.",
+      "remediation": "Set nodeIntegration:false, contextIsolation:true, and route Node calls through a preload IPC bridge.",
+      "reference": "electronjs.org/docs/latest/tutorial/security"
+    },
+    {
+      "id": "CONTEXT_ISOLATION_FALSE",
+      "pattern": "contextIsolation\\s*:\\s*false",
+      "severity": "error",
+      "message": "Disabling contextIsolation lets renderer JS pollute preload's globals — privilege escalation.",
+      "remediation": "Keep contextIsolation:true. Use contextBridge.exposeInMainWorld for explicit API surface.",
+      "reference": "electronjs.org/docs/latest/tutorial/context-isolation"
+    },
+    {
+      "id": "RENDERER_FS_IMPORT",
+      "pattern": "^import\\s+[^'\";]+\\s+from\\s+['\"](fs|child_process|crypto|path|os)['\"]",
+      "flags": "gm",
+      "severity": "error",
+      "message": "Renderer-side file (panel/src) directly importing a Node builtin — must route through preload.",
+      "remediation": "Move the call into electron/main.ts, expose via contextBridge, consume from renderer.",
+      "reference": "electron/preload.ts"
+    },
+    {
+      "id": "WEB_PREFERENCES_MISSING_CSP",
+      "pattern": "webPreferences\\s*:\\s*\\{(?![^}]*sandbox\\s*:\\s*true)[^}]*\\}",
+      "severity": "warn",
+      "message": "webPreferences without sandbox:true — preload runs unsandboxed; broader attack surface.",
+      "remediation": "Add `sandbox: true` to webPreferences when feasible.",
+      "reference": "electronjs.org/docs/latest/tutorial/sandbox"
+    }
+  ]
+}

@@ -1,0 +1,81 @@
+# project.invariants.yaml — EXAMPLE (copy to project root)
+
+# Proje özel kurallar. Starter kit generic kalır; her yeni projede bu dosyayı doldur.
+# Sentinel skill 03/04/06 ve AGENTS.md §3 bu dosyaya referans verebilir.
+
+project:
+  name: "My Application"
+  description: "One-line purpose"
+
+modules:
+  backend:
+    path: backend
+    role: "API / services"
+  frontend:
+    path: frontend
+    role: "User-facing UI"
+  # docs:
+  #   path: docs
+
+api:
+  enabled: true
+  envelope:
+    success_key: success
+    data_key: data
+    error_key: error
+  # example: { success: true, data: {}, error: null }
+
+network:
+  # Tek canonical backend URL/port — boş bırakılırsa port kuralı devre dışı
+  canonical_host: localhost
+  canonical_port: 8080
+  forbidden_ports: [3000, 4000, 5000]
+
+routing:
+  # Express-style: static before dynamic
+  static_before_dynamic: true
+
+frontend:
+  defensive_arrays: true   # Array.isArray before .map/.reverse
+  forbidden_ui_calls:      # browser blocking modals
+    - prompt
+    - alert
+    - confirm
+
+design:
+  enabled: false           # true ise palette skill aktif
+  token_prefix: "theme-"   # Tailwind/CSS token prefix
+  forbidden_hex_patterns: []  # örn: ["#b026ff"]
+
+brand:
+  enabled: false
+  public_name: "My Brand"
+  forbidden_strings: []    # örn: ["InternalVendorName"]
+
+security:
+  download_url_guard: false   # SSRF assertSafeUrl benzeri
+  no_eval: true
+
+quality:
+  min_sentinel_score: 85
+  changelog_required: true
+
+# Kaynak disiplini (R23, R25) — container/disk tüketen projeler
+resource_discipline:
+  enabled: false
+  borrow_return_required: true
+  vhdx_warn_gb: 15
+  vhdx_block_gb: 30
+  disk_free_warn_gb: 60
+  disk_free_block_gb: 40
+  heavy_sweep_requires_flag: true
+  e2e_skip_when_docker_down: true
+  protected:
+    - "container runtime program install"
+    - "default WSL distro for Docker"
+  commands:                    # proje script isimleri — örnek
+    status: "npm run ac:status"
+    idle: "npm run ac:idle"
+    dev_stop: "npm run ac:dev-stop"
+    disk_guard: "npm run forge:disk-guard"
+  reference: "docs/guides/ResourceDiscipline.md"

@@ -1,0 +1,16 @@
+# Surface: landing hero + brand identity — TR→PL admin tracking peace of mind
+surface: landing-hero-identity
+references:
+  - "reuse: Quiet Authority + existing admin packages"
+  - "operator 2026-09-14: Türkiye’den Polonya evrak/idari takip; iş adamı teslim eder, kafa rahat"
+restore_phrase: "pre-idari-peace"
+snapshot: "_snapshots/2026-09-14-pre-idari-peace/"
+out_of_scope:
+  - layout redesign / Stripe motion retune
+  - inventing clients/stats
+  - claiming law firm / registration
+success_criteria:
+  - "/tr hero reads as Poland-side admin & paperwork tracking for Turkish businesses"
+  - "primary CTA → idari paketler; trade secondary"
+  - "Browser QA /tr"
+  - "guard green"

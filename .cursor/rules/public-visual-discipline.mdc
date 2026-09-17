@@ -1,0 +1,22 @@
+---
+description: Public landing visual work — Browser QA, one surface, references, snapshot (do not skip)
+alwaysApply: true
+---
+
+# Public Visual Discipline
+
+When the task touches **public site visuals** (landing, hub, hero, header, footer, packages, process, FAQ, lead, `globals.css` tokens, brand lockup), agents **MUST** follow `.cursor/skills/public-visual-qa/SKILL.md`.
+
+## Hard gates
+
+1. **Browser QA required** after visual edits (`cursor-ide-browser` + screenshots). No visual sign-off from code alone.
+2. **One surface per tur** unless operator lists multiple surfaces.
+3. **References required** (2–3 URLs or explicit reuse) before a new aesthetic direction.
+4. **Snapshot before experiment** — default restore: `_snapshots/2026-09-12-quiet-authority-baseline/` (`quiet authority baseline'a dön`).
+5. **No invented trust content** (clients, stats, awards, testimonials).
+6. Do not re-apply rejected experiments without ask: grey mist atmosphere, whole-site “premium B2B prompt” sweeps, green consumer WhatsApp FAB as primary chrome.
+
+## After code
+
+- `node scripts/pre-commit-guard.js`
+- Final reply: surfaces + routes browser-checked + restore phrase

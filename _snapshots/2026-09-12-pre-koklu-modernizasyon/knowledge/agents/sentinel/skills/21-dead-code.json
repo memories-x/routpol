@@ -1,0 +1,55 @@
+{
+  "id": "dead-code",
+  "title": "Dead Code & Cleanup",
+  "description": "Yorum bırakılmış kod blokları, unused exports, orphan dosyalar, legacy markers.",
+  "reference": "Code hygiene",
+  "scope": "any",
+  "ext": [".ts", ".tsx", ".js", ".jsx"],
+  "rules": [
+    {
+      "id": "COMMENTED_CODE_BLOCK",
+      "pattern": "(?:^\\s*//[^\\n]*\\n){5,}",
+      "flags": "gm",
+      "severity": "info",
+      "message": "5+ satırlık ardışık yorum bloğu — muhtemelen yorumlanmış eski kod. Silmek tercih edilir (git history yedek).",
+      "remediation": "Eski kod git history'de duruyor. Yorum bloğunu sil — kalan kod temizdir.",
+      "reference": "Code hygiene"
+    },
+    {
+      "id": "LEGACY_DEPRECATED_MARKER",
+      "pattern": "@deprecated|@legacy|DEPRECATED|LEGACY",
+      "flags": "g",
+      "severity": "info",
+      "message": "Deprecated/legacy marker — silinmesi planlandı mı? Plan yoksa sürdürülebilir değil.",
+      "remediation": "CHANGELOG'a 'remove by vX.Y' tarihi yaz veya marker'ı sil.",
+      "reference": "Refactoring discipline"
+    },
+    {
+      "id": "EXPORT_NEVER_IMPORTED",
+      "pattern": "^export\\s+(?:const|function|class|interface|type)\\s+\\w+",
+      "flags": "gm",
+      "severity": "info",
+      "message": "Exported symbol — başka bir dosyadan import edilip kullanılmıyorsa unused export. tsc strict 'noUnusedLocals' ile yakalanır.",
+      "remediation": "tsc + 'noUnusedExports' aç. Veya manuel: `grep -rn 'import.*<symbol>'` çıktısı boşsa unused.",
+      "reference": "tsconfig.app.json noUnusedLocals"
+    },
+    {
+      "id": "MOCK_FIXTURE_LEAKED",
+      "pattern": "(?:mock|fake|fixture|stub|sample|test-only)[\\s_]?[A-Z]\\w+",
+      "flags": "g",
+      "severity": "info",
+      "message": "Test/mock/fixture isimli identifier — production kodunda olmamalı.",
+      "remediation": "Mock'ları __mocks__ veya .test.ts dosyalarına taşı. Production'a sızmasın.",
+      "reference": "src/__tests__/ veya scratch/"
+    },
+    {
+      "id": "EMPTY_FUNCTION",
+      "pattern": "(?:function\\s+\\w+\\s*\\([^)]*\\)|const\\s+\\w+\\s*=\\s*\\([^)]*\\)\\s*=>)\\s*\\{\\s*\\}",
+      "flags": "g",
+      "severity": "info",
+      "message": "Empty function body — placeholder veya yarım iş.",
+      "remediation": "Implement et, sil veya throw new Error('not implemented') koy.",
+      "reference": "Code hygiene"
+    }
+  ]
+}

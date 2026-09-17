@@ -1,0 +1,42 @@
+{
+  "id": "security",
+  "title": "Security Hardening",
+  "description": "SSRF guards, hash verification, no eval, no shell injection.",
+  "reference": "docs/wiki/Marketplace.md — Security",
+  "scope": "daemon",
+  "ext": [".ts", ".js"],
+  "rules": [
+    {
+      "id": "RAW_AXIOS_GET",
+      "pattern": "axios\\.(get|post|put|delete)\\s*\\(\\s*(?!assertSafeUrl|`https://api\\.osv\\.dev|this\\.WEB_GARAJ)",
+      "severity": "warn",
+      "message": "External HTTP call without SSRF guard — attacker can target internal services.",
+      "remediation": "Pass URL through assertSafeUrl() first (see MarketplaceService.ts). Only whitelisted hosts may skip.",
+      "reference": "docs/wiki/Marketplace.md"
+    },
+    {
+      "id": "EVAL_USAGE",
+      "pattern": "\\beval\\s*\\(",
+      "severity": "error",
+      "message": "eval() is forbidden — code injection vector.",
+      "remediation": "Use JSON.parse, Function constructor with allowlist, or refactor to a switch/map.",
+      "reference": "OWASP A03"
+    },
+    {
+      "id": "CHILD_PROCESS_EXEC_RAW",
+      "pattern": "exec(Sync)?\\s*\\(\\s*[`'\"][^`'\"]*\\$\\{",
+      "severity": "error",
+      "message": "Shell command built with template interpolation — command injection risk.",
+      "remediation": "Use execFile / spawn with arg array, never string-interpolate untrusted input into a shell string.",
+      "reference": "OWASP A03"
+    },
+    {
+      "id": "MISSING_AUTH_MIDDLEWARE",
+      "pattern": "Routes\\.(get|post|put|delete)\\s*\\(\\s*['\"][^'\"]+['\"]\\s*,\\s*async",
+      "severity": "warn",
+      "message": "Route declared without explicit auth middleware — verify it's intentionally public.",
+      "remediation": "Add protectCentralAPI middleware unless this is an /health or /webhook callback endpoint.",
+      "reference": "ac-daemon/src/middleware/auth.ts"
+    }
+  ]
+}

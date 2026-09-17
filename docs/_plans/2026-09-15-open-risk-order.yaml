@@ -1,0 +1,51 @@
+title: open-risk closeout order
+scope:
+  project: pol-turk
+  module: copy + ops prep
+  out_of_scope:
+    - Hostinger DNS without VPS_IP
+    - Stripe live / Resend keys (operator secrets)
+    - New logo artwork
+intent:
+  what: Ordered mitigation of open risks; execute code-side first, then ops gates.
+  why: Operator asked best sequence and to proceed.
+  triggered_by: user_request
+order:
+  - id: P0
+    name: Brand lock note (ROUTEPOL / routpol.com)
+    owner: agent
+    status: done
+  - id: P1
+    name: Fix PL urzędu corruption
+    owner: agent
+    status: done
+  - id: P2
+    name: Bank admin-support copy (garanti yok + idari destek var)
+    owner: agent
+    status: done
+  - id: P3
+    name: Soft CTA görüşmek için → #iletisim + form option clarity
+    owner: agent
+    status: done
+  - id: P4
+    name: ARCHITECT_TASKS ROUTEPOL focus sync
+    owner: agent
+    status: done
+  - id: P5
+    name: LandingHeader / Process hydration (cheap)
+    owner: agent
+    status: done
+  - id: P6
+    name: Hostinger A → Plesk VPS_IP
+    owner: operator+agent
+    blocked_on: VPS_IP
+  - id: P7
+    name: Plesk deploy + golive:check --strict
+    owner: operator+agent
+    blocked_on: P6 + secrets
+restore_phrase: quiet authority baseline'a dön
+success_criteria:
+  - P0–P5 shipped
+  - P6–P7 listed with explicit operator inputs
+estimated_effort: 50
+risk_overall: medium

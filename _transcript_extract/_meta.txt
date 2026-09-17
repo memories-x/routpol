@@ -1,0 +1,14 @@
+Hero.tsx: 6 lines
+Header.tsx: 157 lines
+Footer.tsx: 74 lines
+globals.css: 25 lines
+layout_root.tsx: 63 lines
+page.tsx: 7 lines
+Services.tsx: 13 lines
+Process.tsx: 46 lines
+Scope.tsx: 71 lines
+WhyUs.tsx: 105 lines
+Faq.tsx: 48 lines
+Contact.tsx: 355 lines
+SocialProof.tsx: 50 lines
+locale_layout.tsx: 35 lines

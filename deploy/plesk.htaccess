@@ -1,0 +1,7 @@
+# Plesk — Apache additional directives (domain → Apache & nginx Settings)
+# Blocks public HTTP access to app internals if document root is the app folder.
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteRule ^(data|node_modules|\.next|\.env)(/|$) - [F,L]
+</IfModule>

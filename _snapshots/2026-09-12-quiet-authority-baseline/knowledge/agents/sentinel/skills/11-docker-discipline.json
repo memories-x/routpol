@@ -1,0 +1,50 @@
+{
+  "id": "docker-discipline",
+  "title": "Docker Container Discipline",
+  "description": "Container creation pitfalls — privileged mode, latest tags, missing resource limits.",
+  "reference": "docs/wiki/DockerManager-updateEnv.md",
+  "scope": "daemon",
+  "ext": [".ts", ".js"],
+  "rules": [
+    {
+      "id": "PRIVILEGED_TRUE",
+      "pattern": "Privileged\\s*:\\s*true",
+      "severity": "error",
+      "message": "Privileged container = host root. Multi-tenant violation, complete escape path.",
+      "remediation": "Use specific capabilities via CapAdd instead; e.g. ['NET_ADMIN'].",
+      "reference": "AGENTS.md"
+    },
+    {
+      "id": "IMAGE_LATEST",
+      "pattern": "Image\\s*:\\s*['\"`][^'\"`]+:latest['\"`]",
+      "severity": "warn",
+      "message": "Pinning to `:latest` makes builds non-reproducible.",
+      "remediation": "Pin a specific digest or semver tag. Update via controlled bump.",
+      "reference": "GAME_PROFILES in ProvisioningEngine.ts"
+    },
+    {
+      "id": "IMAGE_NO_TAG",
+      "pattern": "Image\\s*:\\s*['\"`][^'\":/`]+['\"`]",
+      "severity": "warn",
+      "message": "Image reference without tag — defaults to :latest, same problem as above.",
+      "remediation": "Always include explicit tag.",
+      "reference": "AGENTS.md"
+    },
+    {
+      "id": "BIND_ROOT_PATH",
+      "pattern": "Binds\\s*:[\\s\\S]*?['\"`]/(?:etc|root|home|var/run/docker\\.sock)['\"`]",
+      "severity": "error",
+      "message": "Bind mount to host root / docker.sock — full host compromise.",
+      "remediation": "Mount only the per-server volume path under ProgramData/volumes/<serverId>.",
+      "reference": "DockerManager.createServer"
+    },
+    {
+      "id": "MISSING_MEMORY_LIMIT",
+      "pattern": "createContainer\\s*\\(\\s*\\{(?:(?!Memory)[\\s\\S]){0,500}HostConfig",
+      "severity": "warn",
+      "message": "createContainer call may be missing Memory limit — single tenant can starve host.",
+      "remediation": "Always set HostConfig.Memory and NanoCpus per ServerCreateConfig contract.",
+      "reference": "DockerManager.ts:88"
+    }
+  ]
+}

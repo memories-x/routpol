@@ -1,0 +1,34 @@
+{
+  "id": "i18n-completeness",
+  "title": "i18n Completeness",
+  "description": "User-visible strings must go through `t()` so TR/EN toggle works everywhere.",
+  "reference": "ac-panel/src/context/LanguageContext.tsx",
+  "scope": "panel",
+  "ext": [".tsx"],
+  "rules": [
+    {
+      "id": "HARDCODED_JSX_TEXT_EN",
+      "pattern": ">\\s*[A-Z][a-z]+(?:\\s+[A-Za-z]+){1,6}\\s*<",
+      "severity": "info",
+      "message": "Multi-word capitalized text directly in JSX — likely a hardcoded English string.",
+      "remediation": "Replace with `{t('namespace.key')}` and add the key to src/i18n/translations.ts in both EN and TR.",
+      "reference": "src/context/LanguageContext.tsx"
+    },
+    {
+      "id": "HARDCODED_JSX_TEXT_TR",
+      "pattern": ">\\s*[A-ZÇĞİÖŞÜ][a-zçğıöşü]+(?:\\s+[A-Za-zÇĞİÖŞÜçğıöşü]+){1,6}\\s*<",
+      "severity": "info",
+      "message": "Multi-word Turkish text directly in JSX — must go through t().",
+      "remediation": "Same fix as English.",
+      "reference": "src/i18n/translations.ts"
+    },
+    {
+      "id": "BUTTON_TEXT_LITERAL",
+      "pattern": "<button[^>]*>\\s*[A-Za-z][^<{]{3,}</button>",
+      "severity": "warn",
+      "message": "Button label is a literal string, not via t() — language toggle leaves it stuck in source language.",
+      "remediation": "Wrap with t(). Buttons are the highest-impact i18n surface.",
+      "reference": "src/i18n/translations.ts"
+    }
+  ]
+}

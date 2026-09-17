@@ -1,0 +1,42 @@
+{
+  "id": "defensive-frontend",
+  "title": "Defensive Coding (Frontend)",
+  "description": "API payloads may be partial, null, or wrong-typed. Guard every access. See project.invariants.yaml → frontend.defensive_arrays.",
+  "reference": "PROJECT_CHARTER.md → frontend",
+  "scope": "any",
+  "ext": [".ts", ".tsx"],
+  "rules": [
+    {
+      "id": "UNGUARDED_TO_FIXED",
+      "pattern": "\\)\\.toFixed\\s*\\(",
+      "severity": "error",
+      "message": "`.toFixed()` called without numeric guard — runtime crash if value is null/string.",
+      "remediation": "Wrap with `typeof x === 'number' ? x.toFixed(2) : '...'` before calling toFixed.",
+      "reference": "AGENTS.md"
+    },
+    {
+      "id": "UNGUARDED_ARRAY_METHOD",
+      "pattern": "\\.data\\.(map|filter|find|forEach|reduce|some|every)\\s*\\(",
+      "severity": "warn",
+      "message": "Array method on `.data` without Array.isArray guard — crashes when backend returns {} or null.",
+      "remediation": "Use `Array.isArray(res.data) ? res.data.map(...) : []`.",
+      "reference": "AGENTS.md"
+    },
+    {
+      "id": "NON_NULL_ASSERTION",
+      "pattern": "!\\.[a-zA-Z_]",
+      "severity": "warn",
+      "message": "TypeScript non-null assertion (`!.`) bypasses type safety — risky on backend data.",
+      "remediation": "Replace with optional chaining (`?.`) + explicit fallback.",
+      "reference": "AGENTS.md"
+    },
+    {
+      "id": "JSON_PARSE_UNCAUGHT",
+      "pattern": "JSON\\.parse\\s*\\(",
+      "severity": "info",
+      "message": "JSON.parse without try/catch — malformed input crashes the call site.",
+      "remediation": "Wrap with try/catch or use a safe-parse helper.",
+      "reference": "AGENTS.md"
+    }
+  ]
+}

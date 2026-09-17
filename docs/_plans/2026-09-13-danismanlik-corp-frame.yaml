@@ -1,0 +1,16 @@
+# Surface: /danismanlik — corporate service architecture (not verbatim operator speech)
+surface: danismanlik
+references:
+  - "reuse: Treximpol buy/sell service menu structure"
+  - "operator facts (prior): research, firm ID, meetings, RFQ; fee per engagement; optional PL ops + partner customs"
+restore_phrase: "pre-corp-service-frame"
+snapshot: "_snapshots/2026-09-13-pre-corp-service-frame/"
+out_of_scope:
+  - landing hero redesign
+  - packages / Stripe
+  - public rates / named partners
+success_criteria:
+  - "Corporate hierarchy: positioning → services → engagement → operations → audience → boundaries"
+  - "No conversational / dictation tone"
+  - "Browser QA /tr/danismanlik"
+  - "guard green"

@@ -1,0 +1,10 @@
+﻿{
+    "label":  "Pre kökü modernization — rollback if rejected",
+    "restorePhrase":  [
+                          "pre-koklu snapshot",
+                          "kökü öncesi",
+                          "2026-09-12-pre-koklu-modernizasyon"
+                      ],
+    "id":  "2026-09-12-pre-koklu-modernizasyon",
+    "createdAt":  "2026-09-12T19:44:15.4690423+02:00"
+}

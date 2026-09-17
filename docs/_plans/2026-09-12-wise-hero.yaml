@@ -1,0 +1,17 @@
+id: 2026-09-12-wise-hero
+surface: hero
+goal: Wise-inspired Quiet Authority hero — sınır ötesi netlik, sakin motion, tek güçlü CTA
+refs:
+  - https://wise.com/ (primary)
+  - https://stripe.com/ (CTA/ritim)
+restore: quiet authority baseline'a dön
+out_of_scope:
+  - header footer scope bridge packages process faq lead hub
+  - grey mist / navy full-bleed dossier / QA 2.0 blur
+  - invented trust metrics
+success_criteria:
+  - brand first in viewport
+  - primary emerald CTA + secondary text link
+  - demo = belge özeti with staggered calm motion
+  - Browser QA /tr desktop + mobile
+ship: node scripts/pre-commit-guard.js

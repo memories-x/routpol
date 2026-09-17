@@ -1,0 +1,50 @@
+{
+  "id": "workflow-hygiene",
+  "title": "Workflow & Code Hygiene",
+  "description": "Catches stale debug noise, todo-rot, and other anti-patterns that signal sloppy completion.",
+  "reference": "AGENTS.md → Workflow Disiplini",
+  "scope": "any",
+  "ext": [".ts", ".tsx", ".js", ".jsx"],
+  "rules": [
+    {
+      "id": "CONSOLE_LOG",
+      "pattern": "console\\.log\\s*\\(",
+      "severity": "warn",
+      "message": "console.log left in code — keep logger.* in daemon and toast errors in panel; debug logs should be removed.",
+      "remediation": "Replace with logger.debug / logger.info (daemon) or remove. Use console.error only in catch blocks.",
+      "reference": "AGENTS.md"
+    },
+    {
+      "id": "TODO_FIXME",
+      "pattern": "\\b(TODO|FIXME|XXX|HACK)\\b",
+      "severity": "info",
+      "message": "TODO/FIXME marker — track in a real issue or remove. Stale TODOs are noise.",
+      "remediation": "Either fix now, or remove the marker and write it in CHANGELOG / docs/wiki as an explicit open gap.",
+      "reference": "AGENTS.md → Sıraya Sokulmuş Açık Kapılar"
+    },
+    {
+      "id": "DEBUGGER_STATEMENT",
+      "pattern": "\\bdebugger\\b",
+      "severity": "error",
+      "message": "`debugger` statement left in code — halts the renderer in DevTools.",
+      "remediation": "Remove before commit. If you need a breakpoint, use VS Code's DAP.",
+      "reference": "AGENTS.md"
+    },
+    {
+      "id": "ANY_CAST_OVERUSE",
+      "pattern": "\\bas\\s+any\\b",
+      "severity": "info",
+      "message": "`as any` cast — usually a sign that types weren't modeled correctly.",
+      "remediation": "Define the proper interface or use `unknown` + type guard. Only middleware coercion (`protectCentralAPI as any`) is whitelisted.",
+      "reference": "AGENTS.md"
+    },
+    {
+      "id": "EMPTY_CATCH",
+      "pattern": "catch\\s*\\([^)]*\\)\\s*\\{\\s*\\}",
+      "severity": "warn",
+      "message": "Empty catch block — silent failure hides bugs.",
+      "remediation": "At minimum: logger.warn / console.error the error. Or document why it's intentionally ignored.",
+      "reference": "AGENTS.md → Defensive coding"
+    }
+  ]
+}
